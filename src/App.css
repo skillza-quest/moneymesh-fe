@@ -1,38 +1,124 @@
-.App {
-  text-align: center;
+@font-face {
+  font-family: 'Aeonik Bold';
+  src: url('../public/assets/Aeonik-Bold.woff2') format('woff2'),
+      url('../public/assets/Aeonik-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+@font-face {
+  font-family: 'Aeonik';
+  src: url('../public/assets/Aeonik-Regular.woff2') format('woff2'),
+      url('../public/assets/Aeonik-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+  font-family: 'Aeonik' !important;
+  background-color: #F0F3F8 !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+strong {
+  font-family: 'Aeonik Bold';
+}
+
+
+ul {
+  padding-inline-start: 0px !important;
+}
+
+:focus-visible {
+  outline: rgb(65, 61, 247) auto 1px;
+}
+
+.active-link {
+  background-color: #F0F3F8;
+  color: rgb(65, 61, 247);
+}
+
+.nav-item {
+  margin-right: 20px; /* Add spacing between menu items */
+}
+
+.investor-list {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.sidebar {
+  flex: 1;
+  /* your styles here */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main-content {
+  flex: 3;
+  /* your styles here */
 }
+
+.card-ext {
+  background: #fff;
+  border-radius: 0px;
+  overflow: hidden;
+  height: 100% !important;
+  width: 300px;
+  box-shadow: 0 3px 4px rgba(180, 180, 180, 0.05); /* Light Blurred Shadow */
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+  text-decoration: none;
+  border-width: 0 !important;
+  padding: 20px;
+  margin-bottom: 15px;
+  color: #101010 !important;
+}
+
+.card-ext:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-ext strong {
+  color: rgb(65, 61, 247);
+}
+
+.filter-section strong {
+  font-size: 8pt;
+  margin-bottom:50px;
+  color: #898989;
+}
+a {
+  color: #101010 !important;
+  text-decoration: none !important;
+}
+
+/* Style for the search container */
+.search-container {
+  position: relative;
+  width: 100%;
+  left:-10px;
+  margin-bottom: 15px;
+}
+
+/* Style for the search input to make it look like the card */
+.search-input {
+  width: 100%;
+  height: 100%;
+  padding: 15px 15px 15px 40px;
+  border-radius: 0px;
+  border: none;
+  box-shadow: 0 3px 4px rgba(180, 180, 180, 0.05);
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  margin-left: 10px;
+  color: #101010 !important;
+}
+
+/* Style for the search icon */
+.search-icon {
+  position: absolute;
+  left: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #101010;
+}
+
