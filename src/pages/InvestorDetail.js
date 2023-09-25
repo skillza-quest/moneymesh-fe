@@ -10,7 +10,7 @@ const InvestorDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`https://65.0.135.92:3001/investors/${id}`)
+      .get(`https://skillza.quest/investors/${id}`)
       .then((response) => setInvestorDetails(response.data))
       .catch((error) => console.error(error));
   }, [id]);

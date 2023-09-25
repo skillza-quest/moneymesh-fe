@@ -32,7 +32,7 @@ function App() {
         setIsAdmin(roles.includes('Admin'));
       }
       
-      fetch('https://65.0.135.92:3001/users/handleuser', {
+      fetch('https://skillza.quest/users/handleuser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
