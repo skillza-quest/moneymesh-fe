@@ -10,7 +10,7 @@ const InvestorDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/investors/${id}`)
+      .get(`http://65.0.135.92:3001/investors/${id}`)
       .then((response) => setInvestorDetails(response.data))
       .catch((error) => console.error(error));
   }, [id]);

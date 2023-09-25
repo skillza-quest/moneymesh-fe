@@ -32,7 +32,7 @@ function App() {
         setIsAdmin(roles.includes('Admin'));
       }
       
-      fetch('http://localhost:3001/users/handleuser', {
+      fetch('http://65.0.135.92:3001/users/handleuser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
