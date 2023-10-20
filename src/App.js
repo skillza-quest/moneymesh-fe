@@ -8,9 +8,13 @@ import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
 import ProfilePage from './pages/ProfilePage';
 import './App.css';
+
 import { UserIdProvider } from './context/UserIdContext';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import gifSrc from './infinite-loader.gif'
+import UserMandates from './components/UserMandates';
+import MandatePage from './pages/MandatePage';
+import MandateInvestorPage from './pages/MandateInvestorPage';
 
 
 function App() {
@@ -70,6 +74,9 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/investors" element={<InvestorList />} />
             <Route path="/investors/:id" element={<InvestorDetail />} />
+            <Route path="/mandates" element={<UserMandates />} />
+            <Route path="/mandates/:mandateId" element={<MandatePage />} />
+            <Route path="/mandates/:mandateId/investor/:investorId" element={<MandateInvestorPage />} />
           </>
         ) : (
           // Redirect unauthenticated users to the login page
