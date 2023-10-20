@@ -5,11 +5,12 @@ import FiltersSidebar from '../components/FiltersSidebar';
 import TopBar from '../components/TopBar'
 const InvestorList = () => {
   const userId = localStorage.getItem('userId');
-  const [originalInvestors, setOriginalInvestors] = useState([]); // original dataset
-  const [filteredInvestors, setFilteredInvestors] = useState([]); // filtered dataset
+  const [originalInvestors, setOriginalInvestors] = useState([]); 
+  const [filteredInvestors, setFilteredInvestors] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({ /* your filter state here */ });
+  const [mandateName, setMandateName] = useState("");
+  const [filters, setFilters] = useState({ });
   const [investmentStageFilter, setInvestmentStageFilter] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -154,7 +155,30 @@ const InvestorList = () => {
       return true;
     });
   };
-
+  const createMandate = async () => {
+    const investorData = filteredInvestors.map((investor) => {
+      return {
+        investorId: investor._id,
+        mandateStatus: 'new',  
+        events: [], 
+        notes: ''  
+      };
+    });
+    
+    const newMandate = {
+      mandateName: mandateName,
+      creatorId: userId,
+      investors: investorData 
+    };
+    
+    try {
+      const response = await axios.post('http://localhost:3001/mandates/create', newMandate);
+      console.log('New mandate created:', response.data);
+    } catch (error) {
+      console.error('Could not create mandate:', error);
+    }
+  };
+  
   if (loading) return <p>Loading...</p>;
   return (
     <>
@@ -167,23 +191,39 @@ const InvestorList = () => {
                 </div>
             </div>
             <div className="col-12 col-md-8 col-lg-8 col-xl-8">
-                <div className="search-container">
-                  <div className="search-icon">
-                    <i className="fa fa-search" style={{color: 'rgb(65, 61, 247)'}}></i> 
-                  </div>
-                  <input type="text" placeholder="Search Investors" className="search-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                <div className='row justify-content-center'>
+                <div className='col-12 col-md-8 col-lg-6 mb-4' style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <input 
+                    type="text" 
+                    className='form-control'
+                    style={{ flex: 1 }}  // Takes up available space
+                    placeholder="Enter Mandate Name" 
+                    value={mandateName} 
+                    onChange={(e) => setMandateName(e.target.value)}  // Set mandateName
+                  />
+                  <button className='btn btn-primary' onClick={createMandate}>Create a Mandate</button>
                 </div>
-                <ul>
+                  <div className='col-12 d-none'>
+                    <div className="search-container">
+                      <div className="search-icon">
+                        <i className="fa fa-search" style={{color: 'rgb(65, 61, 247)'}}></i> 
+                      </div>
+                      <input type="text" placeholder="Search Investors" className="search-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+                <ul className='row'>
                     {filteredInvestors.map(filteredInvestor => (
-                      <li className='card-ext' key={filteredInvestor._id}>
-                        <Link to={`/investors/${filteredInvestor._id}`}>
-                          <big><strong>{filteredInvestor.name}</strong></big><br />
-                          <small>
-                            {filteredInvestor.website}<br />
-                            {filteredInvestor.description}<br /><br />
-                            <strong>Avg. Check:</strong> USD {filteredInvestor.averageInvestmentAmount}
-                          </small>
-                        </Link>
+                      <li className='col-12 col-md-6 mb-3' key={filteredInvestor._id}>
+                        <div className='card-ext'>
+                          <Link to={`/investors/${filteredInvestor._id}`}>
+                            <big><strong>{filteredInvestor.name}</strong></big><br />
+                            <small>
+                              {filteredInvestor.website}<br />
+                              <strong>Avg. Check:</strong> USD {filteredInvestor.avgInvestmentAmount}
+                            </small>
+                          </Link>
+                        </div>
                       </li>
                     ))}
                 </ul>

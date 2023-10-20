@@ -22,7 +22,6 @@ function App() {
     return null;
   };
   const { user, isAuthenticated, isLoading } = useAuth0();
-  console.log("User", user);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {

@@ -28,7 +28,9 @@ strong {
 
 ul {
   padding-inline-start: 0px !important;
+  list-style: none;
 }
+
 
 :focus-visible {
   outline: rgb(65, 61, 247) auto 1px;
@@ -69,16 +71,11 @@ ul {
   text-decoration: none;
   border-width: 0 !important;
   padding: 20px;
-  margin-bottom: 15px;
   color: #101010 !important;
 }
 
 .card-ext:hover {
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
-}
-
-.card-ext strong {
-  color: rgb(65, 61, 247);
 }
 
 .filter-section strong {

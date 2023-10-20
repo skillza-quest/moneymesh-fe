@@ -25,27 +25,27 @@ const Topbar = () => {
             
             {/* New Links */}
             <li className="nav-item">
-              <NavLink to="/investors" activeClass="active-link">
+              <NavLink to="/investors" className="active-link">
                 <i className="fat fa-briefcase"></i>&nbsp; Investors
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/startups" activeClass="active-link">
+              <NavLink to="/startups" className="active-link">
                 <i className="fat fa-lightbulb"></i>&nbsp;  Startups
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/people" activeClass="active-link">
+              <NavLink to="/people" className="active-link">
                 <i className="fat fa-users"></i> &nbsp; People
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/profile" activeClass="active-link">
+              <NavLink to="/profile" className="active-link">
                 <i className="fat fa-user"></i> &nbsp; Profile
               </NavLink>
             </li>
             <li className="nav-item" onClick={() => logout()}>
-              <NavLink to="/profile" activeClass="active-link">
+              <NavLink to="/profile" className="active-link">
                 <i className="fat fa-user"></i> &nbsp; Logout
               </NavLink>
             </li>
