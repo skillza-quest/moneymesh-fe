@@ -15,9 +15,17 @@ import gifSrc from './infinite-loader.gif'
 import UserMandates from './components/UserMandates';
 import MandatePage from './pages/MandatePage';
 import MandateInvestorPage from './pages/MandateInvestorPage';
+import NewInvestorForm from './pages/NewInvestor';
+import UpdateInvestorForm from './pages/UpdateInvestor';
+import AcceptInvitePage from './components/AcceptInvite';
 
 
 function App() {
+
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isStartup, setIsStartup] = useState(false);
+
   const RedirectToInvestors = () => {
     const navigate = useNavigate();
     useEffect(() => {
@@ -25,14 +33,14 @@ function App() {
     }, [navigate]);
     return null;
   };
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
+
       if (user && user['https://moneymesh.com/roles']) {
         const roles = user['https://moneymesh.com/roles'];
         setIsAdmin(roles.includes('Admin'));
+        setIsStartup(roles.includes('Startup'));
       }
       
       fetch('https://skillza.quest/users/handleuser', {
@@ -73,10 +81,13 @@ function App() {
           <>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/investors" element={<InvestorList />} />
+            <Route path="/investors/new" element={<NewInvestorForm />} />
+            <Route path="/investors/update/:id" element={<UpdateInvestorForm />} />
             <Route path="/investors/:id" element={<InvestorDetail />} />
             <Route path="/mandates" element={<UserMandates />} />
             <Route path="/mandates/:mandateId" element={<MandatePage />} />
             <Route path="/mandates/:mandateId/investor/:investorId" element={<MandateInvestorPage />} />
+            {isStartup && <Route path="/add-collaborator" element={<AcceptInvitePage />} />}
           </>
         ) : (
           // Redirect unauthenticated users to the login page

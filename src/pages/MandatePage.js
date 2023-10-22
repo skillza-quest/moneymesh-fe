@@ -6,8 +6,14 @@ const MandatePage = () => {
   const { mandateId } = useParams();
   const [mandate, setMandate] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [inviteLink, setInviteLink] = useState('');
 
+  const navigate = useNavigate();
+  const generateInvite = async () => {
+    const response = await axios.post(`http://localhost:3001/generate-invite/${mandateId}`);
+    const { token } = response.data;
+    setInviteLink(`http://yourfrontenddomain.com/accept-invite/${token}`);
+  };
   useEffect(() => {
     const fetchMandate = async () => {
       try {
@@ -48,6 +54,8 @@ const MandatePage = () => {
             </li>
         )) : 'No investors.'}
         </ul>
+        <button onClick={generateInvite}>Generate Invite Link</button>
+      {inviteLink && <p>Share this link: {inviteLink}</p>}  
     </div>
   );
 };
