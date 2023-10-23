@@ -13,6 +13,7 @@ const UserMandates = () => {
         // Replace with your actual API endpoint
         const response = await axios.get(`http://localhost:3001/mandates/user/${userId}`);
         setMandates(response.data);
+        
       } catch (error) {
         console.error('Could not fetch mandates:', error);
       } finally {

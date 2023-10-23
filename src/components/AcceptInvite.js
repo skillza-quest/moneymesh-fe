@@ -5,28 +5,34 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const AcceptInvitePage = () => {
   const { token } = useParams();
+  console.log("Accept invite token:", token);
   const navigate = useNavigate();
-  const { isAuthenticated, loginWithRedirect } = useAuth0();  // Added loginWithRedirect
 
   useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    console.log(userId);
     const acceptInvite = async () => {
       try {
-        await axios.post(`http://localhost:3001/accept-invite/${token}`);
-        alert('You have been added as a collaborator.');
-        navigate('/your-redirect-path');
+        await axios.post(
+          `http://localhost:3001/mandates/accept-invite/${token}`,
+          { userId: userId }  
+        );
+        console.log("added as collaborator");
+        navigate('/mandates')
       } catch (error) {
         console.error('Failed to accept invite:', error);
       }
     };
 
-    if (!isAuthenticated) {
+
+    if (!userId) {
+      console.log("HIT");
       localStorage.setItem('inviteToken', token);
-      loginWithRedirect();  // Added this line to actually redirect
       return;
     }
 
     acceptInvite();
-  }, [isAuthenticated, token, navigate]);
+  }, [token, navigate]);
 
   return <p>Processing invite...</p>;
 };

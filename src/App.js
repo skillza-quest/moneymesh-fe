@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import BulkUpload from './pages/BulkUpload';
@@ -19,83 +18,66 @@ import NewInvestorForm from './pages/NewInvestor';
 import UpdateInvestorForm from './pages/UpdateInvestor';
 import AcceptInvitePage from './components/AcceptInvite';
 
-
-function App() {
-
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isStartup, setIsStartup] = useState(false);
-
-  const RedirectToInvestors = () => {
-    const navigate = useNavigate();
-    useEffect(() => {
-      navigate('/investors');
-    }, [navigate]);
-    return null;
-  };
+const RoleBasedRedirect = () => {
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth0();
+  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+  const [userRole, setUserRole] = useState(localStorage.getItem('userRole'));
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user && user['https://moneymesh.com/roles']) {
+      const roles = user['https://moneymesh.com/roles'];
+      setUserId(user.sub);
+      localStorage.setItem('userId', user.sub);
 
-      if (user && user['https://moneymesh.com/roles']) {
-        const roles = user['https://moneymesh.com/roles'];
-        setIsAdmin(roles.includes('Admin'));
-        setIsStartup(roles.includes('Startup'));
+      if (roles.includes('Admin')) {
+        setUserRole('Admin');
+        localStorage.setItem('userRole', 'Admin');
+        navigate('/bulk-upload');
+      } else if (roles.includes('Investor')) {
+        setUserRole('Investor');
+        localStorage.setItem('userRole', 'Investor');
+        navigate('/investors');
+      } else if (roles.includes('Startup')) {
+        setUserRole('Startup');
+        localStorage.setItem('userRole', 'Startup');
+        navigate('/mandates');
       }
-      
-      fetch('https://skillza.quest/users/handleuser', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          auth0UserId: user.sub, 
-          username: user.nickname, 
-          email: user.email, 
-        }),
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        localStorage.setItem('userId', user.sub);
-      })
-      .catch((error) => {
-        console.error('Error sending user data to the server:', error);
-      });
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, navigate]);
+
+  return null;
+};
+
+function App() {
+  const { isLoading } = useAuth0();
 
   if (isLoading) {
     return <div style={{width:'100%', height: '100%', minHeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'}}>
-    <img src={gifSrc} alt="Loading..." className="centered-gif" width="100px"/>
-  </div>;
+      <img src={gifSrc} alt="Loading..." className="centered-gif" width="100px"/>
+    </div>;
   }
-  
+
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<LogoutPage />} />
-        <Route path="/" element={<RedirectToInvestors />} />
         <Route path="/bulk-upload" element={<BulkUpload />} />
-        {isAuthenticated ? (
-          <>
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/investors" element={<InvestorList />} />
-            <Route path="/investors/new" element={<NewInvestorForm />} />
-            <Route path="/investors/update/:id" element={<UpdateInvestorForm />} />
-            <Route path="/investors/:id" element={<InvestorDetail />} />
-            <Route path="/mandates" element={<UserMandates />} />
-            <Route path="/mandates/:mandateId" element={<MandatePage />} />
-            <Route path="/mandates/:mandateId/investor/:investorId" element={<MandateInvestorPage />} />
-            {isStartup && <Route path="/add-collaborator" element={<AcceptInvitePage />} />}
-          </>
-        ) : (
-          // Redirect unauthenticated users to the login page
-          <Route path="/investors" element={<LoginPage />} />
-        )}
+        <Route path="/" element={<RoleBasedRedirect />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/investors" element={<InvestorList />} />
+        <Route path="/investors/new" element={<NewInvestorForm />} />
+        <Route path="/investors/update/:id" element={<UpdateInvestorForm />} />
+        <Route path="/investors/:id" element={<InvestorDetail />} />
+        <Route path="/mandates" element={<UserMandates />} />
+        <Route path="/mandates/:mandateId" element={<MandatePage />} />
+        <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
+        <Route path="/mandates/:mandateId/investor/:investorId" element={<MandateInvestorPage />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+

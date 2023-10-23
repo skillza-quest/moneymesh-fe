@@ -25,6 +25,11 @@ const Topbar = () => {
             
             {/* New Links */}
             <li className="nav-item">
+              <NavLink to="/mandates" className="active-link">
+                <i className="fat fa-briefcase"></i>&nbsp; Mandates
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/investors" className="active-link">
                 <i className="fat fa-briefcase"></i>&nbsp; Investors
               </NavLink>
