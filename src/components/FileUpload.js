@@ -13,7 +13,7 @@ const FileUpload = () => {
     formData.append('file', file);
 
     try {
-      const res = await axios.post('http://localhost:3001/investors/bulk-upload', formData, {
+      const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/investors/bulk-upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

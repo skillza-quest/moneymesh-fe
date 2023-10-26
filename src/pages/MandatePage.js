@@ -16,7 +16,7 @@ const MandatePage = () => {
     return status.toLowerCase().replace(/\s+/g, '-');
   };
   const generateInvite = async () => {
-    const response = await axios.post(`http://localhost:3001/mandates/generate-invite/${mandateId}`);
+    const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/mandates/generate-invite/${mandateId}`);
     const { token } = response.data;
     console.log("THE TOKEN IS ", token);
     setInviteLink(`http://localhost:3000/accept-invite/${token}`);
@@ -31,10 +31,10 @@ const MandatePage = () => {
   
         try {
           const userId = localStorage.getItem('userId');
-          const response = await axios.get(`http://localhost:3001/mandates/${mandateId}`, { params: { userId: userId } });
+          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}`, { params: { userId: userId } });
           console.log(response.data);
           setMandate(response.data);
-          const inviteTokenResponse = await axios.get(`http://localhost:3001/mandates/${mandateId}/invite-token`);
+          const inviteTokenResponse = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/invite-token`);
           const { token, tokenExists, tokenExpired } = inviteTokenResponse.data;  
           setInviteTokenInfo({ token, tokenExists, tokenExpired });
           console.log('inviteTokenInfo:', inviteTokenResponse.data); 

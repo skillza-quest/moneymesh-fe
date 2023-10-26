@@ -12,7 +12,7 @@ const UpdateInvestorForm = () => {
  
   useEffect(() => {
     const fetchInvestor = async () => {
-      const response = await axios.get(`http://localhost:3001/investors/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/investors/${id}`);
       setInvestor(response.data);
       setLoading(false);
     };
@@ -25,7 +25,7 @@ const UpdateInvestorForm = () => {
 
   const updateInvestor = async (e) => {
     try {
-      await axios.put(`http://localhost:3001/investors/${id}`, investor);
+      await axios.put(`${process.env.REACT_APP_SERVER_URL}/investors/${id}`, investor);
       alert('Investor updated successfully');
     } catch (error) {
       console.error('Could not update the investor:', error);
@@ -34,7 +34,7 @@ const UpdateInvestorForm = () => {
 
   const deleteInvestor = async () => {
     try {
-      await axios.delete(`http://localhost:3001/investors/${id}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/investors/${id}`);
       alert('Investor deleted successfully');
       navigate('/investors');
     } catch (error) {

@@ -13,7 +13,7 @@ const MandateInvestorPage = () => {
   useEffect(() => {
     const fetchInvestorDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/mandates/${mandateId}/investor/${investorId}`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investor/${investorId}`);
         setInvestorData(response.data); // Updated this line
       } catch (error) {
         console.error('Could not fetch investor details:', error);
@@ -27,7 +27,7 @@ const MandateInvestorPage = () => {
 
   const saveNotes = async () => {
     try {
-      const response = await axios.patch(`http://localhost:3001/mandates/${mandateId}/investors/${investorId}/notes`, { notes });
+      const response = await axios.patch(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investors/${investorId}/notes`, { notes });
       console.log('Notes added as an event');
   
       const newEvent = {
@@ -56,7 +56,7 @@ const MandateInvestorPage = () => {
   };
   const updateStatus = async (newStatus) => {
     try {
-      const response = await axios.patch(`http://localhost:3001/mandates/${mandateId}/investors/${investorId}/status`, { status: newStatus });
+      const response = await axios.patch(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investors/${investorId}/status`, { status: newStatus });
       console.log('Status updated:', response.data);
       
       // Update local state

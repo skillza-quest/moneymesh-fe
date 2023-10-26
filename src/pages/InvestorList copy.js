@@ -15,7 +15,7 @@ const InvestorList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://skillza.quest/investors/');
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/investors/`);
         setOriginalInvestors(response.data);
         console.log(response.data);
         console.log("Original Investors", originalInvestors);

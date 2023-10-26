@@ -12,7 +12,7 @@ const UserMandates = () => {
     const fetchMandates = async () => {
       try {
         // Replace with your actual API endpoint
-        const response = await axios.get(`http://localhost:3001/mandates/user/${userId}`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/user/${userId}`);
         setMandates(response.data);
         
       } catch (error) {

@@ -40,7 +40,7 @@ const FiltersSidebar = ({ setFilters }) => {
     useEffect(() => {
       const fetchUniqueIndustries = async () => {
           try {
-              const response = await axios.get('http://localhost:3001/investors/industries');
+              const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/investors/industries`);
               setIndustries(response.data);
               console.log(response.data);
           } catch (error) {

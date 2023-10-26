@@ -16,7 +16,7 @@ const CreateMandate = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://skillza.quest/investors/');
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/investors/`);
         const fetchedInvestors = response.data;
         setOriginalInvestors(fetchedInvestors);
         setFilteredInvestors(fetchedInvestors);
@@ -155,7 +155,7 @@ const CreateMandate = () => {
     };
     
     try {
-      const response = await axios.post('http://localhost:3001/mandates/create', newMandate);
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/mandates/create`, newMandate);
       console.log('New mandate created:', response.data);
     } catch (error) {
       console.error('Could not create mandate:', error);

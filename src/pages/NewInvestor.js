@@ -40,7 +40,7 @@ const NewInvestorForm = () => {
       creatorId,
     };
     try {
-      const response = await axios.post('http://localhost:3001/investors', payload);
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/investors`, payload);
       alert('Investor added successfully');
     } catch (error) {
       alert('Could not add the investor');

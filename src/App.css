@@ -1,17 +1,15 @@
 @font-face {
-  font-family: 'Aeonik Bold';
-  src: url('../public/assets/Aeonik-Bold.woff2') format('woff2'),
-      url('../public/assets/Aeonik-Bold.woff') format('woff');
-  font-weight: bold;
+  font-family: 'Manrope';
+  src: url('assets/fonts/Manrope.woff') format('woff');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('../public/assets/Aeonik-Regular.woff2') format('woff2'),
-      url('../public/assets/Aeonik-Regular.woff') format('woff');
-  font-weight: normal;
+  font-family: 'Manrope-Bold';
+  src: url('assets/fonts/Manrope-Bold.woff') format('woff');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -24,7 +22,7 @@ body {
 }
 
 strong {
-  font-weight: 500;
+  font-family: 'Manrope-Bold';
 }
 
 
@@ -107,7 +105,7 @@ ul {
 .filter-section {
   font-size: 9pt;
   color: #667085;
-  font-weight: bold;
+  font-family: 'Manrope-Bold'
 }
 a {
   color: #101010 !important;

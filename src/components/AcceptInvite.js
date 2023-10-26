@@ -14,7 +14,7 @@ const AcceptInvitePage = () => {
     const acceptInvite = async () => {
       try {
         await axios.post(
-          `http://localhost:3001/mandates/accept-invite/${token}`,
+          `${process.env.REACT_APP_SERVER_URL}/mandates/accept-invite/${token}`,
           { userId: userId }  
         );
         console.log("added as collaborator");

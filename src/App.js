@@ -46,6 +46,9 @@ const RoleBasedRedirect = () => {
         navigate('/mandates');
       }
     }
+    else {
+      navigate('/login')
+    }
   }, [isAuthenticated, user, navigate]);
 
   return null;
