@@ -283,9 +283,9 @@ input[type="checkbox"]:checked::after {
 .illustration {
   position: absolute;
   bottom: 0;
-  right: 0;
-  width: 70px;  
-  height: 140px; 
+  right: 20px;
+  width: 80px;  
+  height: 100px; 
   background-image: url('../src/assets/moneyplantgrowth.png'); 
   background-size: cover;
 }
