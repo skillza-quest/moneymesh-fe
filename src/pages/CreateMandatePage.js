@@ -176,7 +176,7 @@ const CreateMandate = () => {
             <div className="col-12 col-md-8 col-lg-8 col-xl-8">
                 <div className='row justify-content-center'>
                 <div className='col-12 col-md-12 mb-2'>
-                  <div className='flat-card'>
+                  <div className='flat-card' style={{position:'relative'}}>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div className='mb-2'>
                         <big><strong>Create a Mandate</strong></big><br />
@@ -192,6 +192,7 @@ const CreateMandate = () => {
                       />
                     <button className='btn btn-primary' style={{width: 300}} onClick={createMandate}>Create mandate with {filteredInvestors.length} Investors</button>
                     </div>
+                    <div className="illustration"></div>
                   </div>
                 </div>
                   <div className='col-12 d-none'>

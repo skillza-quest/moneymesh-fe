@@ -280,3 +280,12 @@ input[type="checkbox"]:checked::after {
   vertical-align: middle;
 }
 
+.illustration {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 70px;  
+  height: 140px; 
+  background-image: url('../src/assets/moneyplantgrowth.png'); 
+  background-size: cover;
+}
