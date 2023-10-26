@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Slider, Rail, Handles, Tracks } from 'react-compound-slider';
-
+import axios from 'axios'
 const FiltersSidebar = ({ setFilters }) => {
     const [values, setValues] = useState([0, 10000000]);    
-    const [selectedIndustries, setSelectedIndustries] = useState([]);    
-    const [selectedRegions, setSelectedRegions] = useState([]);
+    const [selectedIndustryFocus, setSelectedIndustryFocus] = useState([]);
+    const [selectedGeographicFocus, setSelectedGeographicFocus] = useState([]);
     const [investmentStages, setInvestmentStages] = useState(['Preseed', 'Seed', 'Series A', 'Series B', 'Series C', 'Series D']);
-    const [selectedInvestmentStages, setSelectedInvestmentStages] = useState([]);
+    const [selectedInvestmentStage, setSelectedInvestmentStage] = useState([]);
     const [selectedGrades, setSelectedGrades] = useState([]); 
     const [selectedFounderRatings, setSelectedFounderRatings] = useState([]); // New state for selected founder ratings
-    const [selectedInvestorTypes, setSelectedInvestorTypes] = useState([]); // New state for selected investor types
-
+    const [selectedInvestorType, setSelectedInvestorType] = useState([]);
+    const [industries, setIndustries] = useState([]);
     const [tags, setTags] = useState('');
     const [investmentType, setInvestmentType] = useState('');
-
+    const clearFilters = () => {
+      window.location.reload();
+    };
     const sliderStyle = {
         position: 'relative',
         left: 20,
@@ -29,53 +31,75 @@ const FiltersSidebar = ({ setFilters }) => {
           ...prevFilters,
           minAmount: newValues[0],
           maxAmount: newValues[1],
-          investmentStages: selectedInvestmentStages,
+          investmentStages: selectedInvestmentStage,
         }));
     }
     useEffect(() => {
         handleFilterChange();
-    }, [selectedRegions, selectedIndustries]);
-    const handleFilterChange = () => {
-        setFilters((prevFilters) => ({
-          ...prevFilters,
-          region: selectedRegions,
-          industries: selectedIndustries,
-          investmentStages: investmentStages,
-          grades: selectedGrades,
-          founderRatings: selectedFounderRatings,
-          investorTypes: selectedInvestorTypes, 
-        }));
-      };
-    const toggleIndustry = (industry) => {
-        setSelectedIndustries(prevSelected => {
-          if (prevSelected.includes(industry)) {
-            return prevSelected.filter(item => item !== industry);
-          } else {
-            return [...prevSelected, industry];
+      }, [selectedGeographicFocus, selectedIndustryFocus, selectedInvestorType, selectedInvestmentStage]);
+    useEffect(() => {
+      const fetchUniqueIndustries = async () => {
+          try {
+              const response = await axios.get('http://localhost:3001/investors/industries');
+              setIndustries(response.data);
+              console.log(response.data);
+          } catch (error) {
+              console.error('Could not fetch unique industries:', error);
           }
-        });
       };
-      const toggleRegion = (region) => {
-        setSelectedRegions((prevSelected) => {
-          if (prevSelected.includes(region)) {
-            return prevSelected.filter((item) => item !== region);
+  
+      fetchUniqueIndustries();
+  }, []);
+  const handleFilterChange = () => {
+    const geographiesArray = selectedGeographicFocus.map(geo => geo.trim());
+
+    const newFilters = {
+      region: geographiesArray,
+      industries: selectedIndustryFocus,
+      investmentStages: selectedInvestmentStage,
+      grades: selectedGrades,
+      founderRatings: selectedFounderRatings,
+      investorTypes: selectedInvestorType
+    };
+
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ...newFilters
+    }));
+    console.log("Called setFilters from FiltersSidebar with:", newFilters);
+
+};
+
+      const toggleIndustryFocus = (industry) => {
+        setSelectedIndustryFocus(prevSelected => {
+            if (prevSelected && prevSelected.includes(industry)) {
+                return prevSelected.filter(item => item !== industry);
+            } else {
+                return [...(prevSelected || []), industry];
+            }
+        });
+    };
+    const toggleGeographicFocus = (region) => {
+      setSelectedGeographicFocus((prevSelected) => {
+          if (prevSelected && prevSelected.includes(region)) {
+              return prevSelected.filter((item) => item !== region);
           } else {
-            return [...prevSelected, region];
+              return [...prevSelected, region];
           }
-        });
-      };
+      });
+  };
       const toggleInvestmentStage = (stage) => {
-        setSelectedInvestmentStages((prevSelected) => {
-          if (prevSelected.includes(stage)) {
+        setSelectedInvestmentStage((prevSelected) => {
+          if (prevSelected && prevSelected.includes(stage)) {
             return prevSelected.filter((item) => item !== stage);
-          } else {
-            return [...prevSelected, stage];
-          }
+            } else {
+                return [...prevSelected, stage];
+            }
         });
       };
       const toggleGrade = (grade) => {
         setSelectedGrades((prevSelected) => {
-          if (prevSelected.includes(grade)) {
+          if (prevSelected && prevSelected.includes(grade)) {
             return prevSelected.filter((item) => item !== grade);
           } else {
             return [...prevSelected, grade];
@@ -84,79 +108,127 @@ const FiltersSidebar = ({ setFilters }) => {
       };
       const toggleFounderRating = (rating) => {
         setSelectedFounderRatings((prevSelected) => {
-          if (prevSelected.includes(rating)) {
-            return prevSelected.filter((item) => item !== rating);
+          let updatedRatings;
+          const intRating = parseInt(rating); // Convert rating string to integer
+    
+          if (prevSelected && prevSelected.includes(intRating)) {
+            updatedRatings = prevSelected.filter((item) => item !== intRating);
           } else {
-            return [...prevSelected, rating];
+            updatedRatings = [...prevSelected, intRating];
           }
+    
+          // Directly update the filters here
+          setFilters(prevFilters => ({
+            ...prevFilters,
+            founderRatings: updatedRatings
+          }));
+    
+          return updatedRatings;
         });
       };
+    
       const toggleInvestorType = (type) => {
-        setSelectedInvestorTypes((prevSelected) => {
-          if (prevSelected.includes(type)) {
-            return prevSelected.filter((item) => item !== type);
-          } else {
-            return [...prevSelected, type];
-          }
+        setSelectedInvestorType((prevSelected) => {
+            if (prevSelected && prevSelected.includes(type)) {
+                return prevSelected.filter((item) => item !== type);
+            } else {
+                return [...prevSelected, type];
+            }
         });
-      };
+    };
+    console.log("Selected Founder Ratings in FiltersSidebar:", selectedFounderRatings);
+
   return (
     <div className="filters-sidebar">
       <div style={{minHeight: 500}}>
-        <div className="filter-section">
-          <strong>INDUSTRY<br /></strong>
+      <a onClick={clearFilters} style={{color: 'blue'}}>
+          <small><strong>Clear All Filters</strong></small>
+      </a><br /><br />
+      <div className="filter-section">
+          <strong>INVESTOR TYPE</strong><br />
           <label>
-          <input
-            type="checkbox"
-            value="Tech"
-            onChange={() => toggleIndustry("Edtech")}
-          />&nbsp;
-          Edtech
-          </label><br />
-          <label>
-            <input
+                    <input
+                        type="checkbox"
+                        value="Family Office"
+                        onChange={() => toggleInvestorType("Family Office")}
+                    />&nbsp;
+                    Family Office
+                </label><br />
+                <label>
+                    <input
+                        type="checkbox"
+                        value="VC"
+                        onChange={() => toggleInvestorType("VC")}
+                    />&nbsp;
+                    VC
+                </label><br />
+                <label>
+                    <input
+                        type="checkbox"
+                        value="Syndicate"
+                        onChange={() => toggleInvestorType("Syndicate")}
+                    />&nbsp;
+                    Syndicate
+                </label><br />
+        </div><br />
+      <div className="filter-section">
+        <strong>INDUSTRY FOCUS<br /></strong>
+        {industries.map(industry => (
+          <>
+          <label key={industry}>
+            &nbsp;&nbsp;<input
               type="checkbox"
-              value="Health"
-              onChange={() => toggleIndustry("Fintech")}
+              value={industry}
+              onChange={() => toggleIndustryFocus(industry)}
             />&nbsp;
-            Fintech
-          </label><br />
-          <label>
-            <input
-              type="checkbox"
-              value="Finance"
-              onChange={() => toggleIndustry("Finance")}
-            />&nbsp;
-            Finance
-          </label><br />
-        </div>
+            {industry}
+          </label>
+          </>
+        ))}
+      </div>
 
         <div className="filter-section"><br />
           <strong>REGION</strong><br />
           <label>
-      <input
-        type="checkbox"
-        value="North America"
-        onChange={() => toggleRegion("North America")}
-      />&nbsp;
-      North America
-    </label><br />
-    <label>
-      <input
-        type="checkbox"
-        value="Europe"
-        onChange={() => toggleRegion("Europe")}
-      />&nbsp;
-      Europe
-    </label><br />
-    <label>
-      <input
-        type="checkbox"
-        value="Asia"
-        onChange={() => toggleRegion("Asia")}
-      />&nbsp;
-      Asia
-    </label>
+                    <input
+                        type="checkbox"
+                        value="India"
+                        onChange={() => toggleGeographicFocus("India")}
+                    />&nbsp;
+                    India
+                </label><br />
+                <label>
+                    <input
+                        type="checkbox"
+                        value="MENA"
+                        onChange={() => toggleGeographicFocus("MENA")}
+                    />&nbsp;
+                    MENA
+                </label><br />
+                <label>
+                    <input
+                        type="checkbox"
+                        value="Dubai"
+                        onChange={() => toggleGeographicFocus("Dubai")}
+                    />&nbsp;
+                    Dubai
+                </label><br />
+                <label>
+                    <input
+                        type="checkbox"
+                        value="US"
+                        onChange={() => toggleGeographicFocus("US")}
+                    />&nbsp;
+                    US
+                </label><br />
+                <label>
+                    <input
+                        type="checkbox"
+                        value="Asia"
+                        onChange={() => toggleGeographicFocus("Asia")}
+                    />&nbsp;
+                    Asia
+                </label><br />
         </div>
 
         <div className="filter-section"><br />
@@ -254,117 +326,64 @@ const FiltersSidebar = ({ setFilters }) => {
                 type="checkbox"
                 value={stage}
                 onChange={() => toggleInvestmentStage(stage)}
-                checked={selectedInvestmentStages.includes(stage)}
+                checked={selectedInvestmentStage.includes(stage)}
               />&nbsp;
               {stage}&nbsp;&nbsp;
             </label>
           ))}
         </div><br />
         <div className="filter-section">
-          <strong>INVESTOR GRADE</strong><br />
+          <strong>RATING</strong><br />
           <label>
             <input
               type="checkbox"
-              value="A"
-              onChange={() => toggleGrade("A")}
+              value="5"
+              onChange={() => toggleFounderRating("5")}
             />&nbsp;
-            A
-          </label>&nbsp;&nbsp;
+            ★★★★★
+          </label><br />
           <label>
             <input
               type="checkbox"
-              value="B"
-              onChange={() => toggleGrade("B")}
+              value="4"
+              onChange={() => toggleFounderRating("4")}
             />&nbsp;
-            B
-          </label>&nbsp;&nbsp;
+            ★★★★
+          </label><br />
           <label>
             <input
               type="checkbox"
-              value="C"
-              onChange={() => toggleGrade("C")}
+              value="3"
+              onChange={() => toggleFounderRating("3")}
             />&nbsp;
-            C
-          </label>
-        </div><br /><br />
-        <div className="filter-section">
-          <strong>FOUNDER RATING</strong><br />
+            ★★★
+          </label><br />
           <label>
             <input
               type="checkbox"
-              value="Best"
-              onChange={() => toggleFounderRating("Best")}
+              value="2"
+              onChange={() => toggleFounderRating("2")}
             />&nbsp;
-            Best
-          </label>&nbsp;&nbsp;
+            ★★
+          </label><br />
           <label>
             <input
               type="checkbox"
-              value="Good"
-              onChange={() => toggleFounderRating("Good")}
+              value="1"
+              onChange={() => toggleFounderRating("1")}
             />&nbsp;
-            Good
-          </label>&nbsp;&nbsp;
+            ★
+          </label><br />
           <label>
             <input
               type="checkbox"
-              value="Average"
-              onChange={() => toggleFounderRating("Average")}
-            />&nbsp;
-            Average
-          </label>&nbsp;&nbsp;
-          <label>
-            <input
-              type="checkbox"
-              value="Bad"
-              onChange={() => toggleFounderRating("Bad")}
-            />&nbsp;
-            Bad
-          </label>&nbsp;&nbsp;
-          <label>
-            <input
-              type="checkbox"
-              value="Terrible"
-              onChange={() => toggleFounderRating("Terrible")}
-            />&nbsp;
-            Terrible
-          </label>&nbsp;&nbsp;
-          <label>
-            <input
-              type="checkbox"
-              value="Unrated"
+              value="0"
               onChange={() => toggleFounderRating("Unrated")}
             />&nbsp;
             Unrated
           </label>&nbsp;&nbsp;
         </div><br /><br />
-        <div className="filter-section">
-          <strong>INVESTOR TYPE</strong><br />
-          <label>
-            <input
-              type="checkbox"
-              value="Individual"
-              onChange={() => toggleInvestorType("Individual")}
-            />&nbsp;
-            Individual
-          </label><br />
-          <label>
-            <input
-              type="checkbox"
-              value="Fund"
-              onChange={() => toggleInvestorType("Fund")}
-            />&nbsp;
-            Fund
-          </label><br />
-          <label>
-            <input
-              type="checkbox"
-              value="Unknown"
-              onChange={() => toggleInvestorType("Unknown")}
-            />&nbsp;
-            Unknown
-          </label><br />
-        </div>
+        
       </div>
     </div>
   );

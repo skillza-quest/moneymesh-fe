@@ -16,10 +16,11 @@ const CreateMandate = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://skillza.quest/investors/');
-        setOriginalInvestors(response.data);
+        const fetchedInvestors = response.data;
+        setOriginalInvestors(fetchedInvestors);
+        setFilteredInvestors(fetchedInvestors);
         console.log(response.data);
         console.log("Original Investors", originalInvestors);
-        setFilteredInvestors(response.data);
       } catch (error) {
         console.error("There was an error fetching the data", error);
       } finally {
@@ -30,23 +31,24 @@ const CreateMandate = () => {
     fetchData();
   }, []);
   useEffect(() => {
-    const newFilters = {...filters, searchTerm: searchTerm, investmentStages: investmentStageFilter};
+    const newFilters = {...filters, searchTerm: searchTerm};
     const filteredList = filterInvestors(originalInvestors, newFilters);
     setFilteredInvestors(filteredList);
     console.log(newFilters.minAmount, newFilters.maxAmount)
-    console.log(filteredList);
-  }, [filters, originalInvestors, searchTerm]);
+    console.log("Updated filters in InvestorList:", filters);
+  }, [filters, originalInvestors, searchTerm, investmentStageFilter]);
  
-
   const filterInvestors = (investors, filters) => {
+    console.log("Filters being used in InvestorList:", filters);
+
     return investors.filter((investor) => {
-      // Filter by Average Investment Amount
       if (
         (filters.minAmount !== undefined && investor.avgInvestmentAmount < filters.minAmount) ||
         (filters.maxAmount !== undefined && investor.avgInvestmentAmount > filters.maxAmount)
       ) {
         return false;
       }
+      
   
       // Filter by Invested Companies
       if (
@@ -56,102 +58,82 @@ const CreateMandate = () => {
       ) {
         return false;
       }
-      if (
-        filters.investmentStages &&
-        filters.investmentStages.length > 0 &&
-        !filters.investmentStages.includes(investor.investmentStage)
-      ) {
-        return false;
-      }
-  
+
       // Filter by industries
       if (
         filters.industries && filters.industries.length > 0 &&
-        !filters.industries.some((industries) => investor.industries.includes(industries))
+        !filters.industries.some((industryFocus) => investor.industryFocus.includes(industryFocus))
       ) {
         return false;
       }
+  // Filter by Region
+  if (filters.region && filters.region.length > 0) {
+    const investorRegions = investor.geographicFocus.split(',').map(region => region.trim()); // Split by comma and trim each value
+    const hasMatchingRegion = filters.region.some(filterRegion => investorRegions.includes(filterRegion)); // Check if any filter matches any investor region
+    if (!hasMatchingRegion) {
+      return false;
+    }
+  }
+  if (
+    filters.grades &&
+    filters.grades.length > 0 &&
+    !filters.grades.includes(investor.grade)
+  ) {
+    return false;
+  }
+
+  // Filter by Tags
+  if (
+    filters.tags &&
+    !filters.tags.some((tag) => investor.tags.includes(tag))
+  ) {
+    return false;
+  }
+
+   // Filter by Reviews
+   if (filters.hasReviews && investor.reviews.length === 0) {
+    return false;
+  }
+
+  // Filter by Contact Person
+  if (
+    filters.contactPerson &&
+    investor.primaryContactName.toLowerCase() !== filters.contactPerson.toLowerCase()
+  ) {
+    return false;
+  }
+
+  // Filter by Investment Stage
+  const investorStages = investor.investmentStage.split(',').map(stage => stage.trim());
+  if (
+    filters.investmentStages &&
+    filters.investmentStages.length > 0 &&
+    !filters.investmentStages.some(stage => investorStages.includes(stage))
+  ) {
+    return false;
+  }
+
+  // General Search Term
+  if (filters.founderRatings && filters.founderRatings.length > 0 && filters.founderRatings.includes(0) && investor.rating === 0) {
+    console.log(filters.founderRatings);
+    return true;
+  }
   
-      // Filter by Region
-      if (filters.region && filters.region.length > 0 && !filters.region.includes(investor.region)) {
-        return false;
-      }
-      if (
-        filters.grades &&
-        filters.grades.length > 0 &&
-        !filters.grades.includes(investor.grade)
-      ) {
-        return false;
-      }
-  
-      // Filter by Tags
-      if (
-        filters.tags &&
-        !filters.tags.some((tag) => investor.tags.includes(tag))
-      ) {
-        return false;
-      }
-  
-      // Filter by Rating
-      if (filters.minRating && investor.rating < filters.minRating) {
-        return false;
-      }
-      if (filters.maxRating && investor.rating > filters.maxRating) {
-        return false;
-      }
-  
-      // Filter by Reviews
-      if (filters.hasReviews && investor.reviews.length === 0) {
-        return false;
-      }
-  
-      // Filter by Contact Person
-      if (
-        filters.contactPerson &&
-        investor.contactPerson.toLowerCase() !== filters.contactPerson.toLowerCase()
-      ) {
-        return false;
-      }
-  
-      // Filter by Investment Stage
-      if (
-        filters.investmentStage &&
-        !filters.investmentStage.includes(investor.investmentStage)
-      ) {
-        return false;
-      }
-  
-      // Filter by Investment Type
-      if (
-        filters.investmentType &&
-        !filters.investmentType.includes(investor.investmentType)
-      ) {
-        return false;
-      }
-  
-      // General Search Term
-      if (
-        filters.searchTerm &&
-        !Object.values(investor).some((value) =>
-          value.toString().toLowerCase().includes(filters.searchTerm.toLowerCase())
-        )
-      ) {
-        return false;
-      }
-      if (
-        filters.founderRatings &&
-        filters.founderRatings.length > 0 &&
-        !filters.founderRatings.includes(investor.founderRating)
-      ) {
-        return false;
-      }
-      if (
-        filters.investorTypes &&
-        filters.investorTypes.length > 0 &&
-        !filters.investorTypes.includes(investor.investorType)
-      ) {
-        return false;
-      }
+  if (
+    filters.founderRatings &&
+    filters.founderRatings.length > 0 &&
+    !filters.founderRatings.includes(investor.rating)
+  ) {
+    console.log("Filtering out investor due to rating mismatch:", investor.name, investor.rating);
+    return false;
+  }
+  if (
+    investor.type && filters.investorTypes && filters.investorTypes.length > 0 &&
+    !filters.investorTypes.includes(investor.type)
+  ) {
+    return false;
+  }
+      
       return true;
     });
   };

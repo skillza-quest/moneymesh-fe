@@ -9,19 +9,17 @@ const InvestorList = () => {
   const [filteredInvestors, setFilteredInvestors] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [mandateName, setMandateName] = useState("");
   const [filters, setFilters] = useState({ });
-  console.log("Filters state in InvestorList:", filters);
-
   const [investmentStageFilter, setInvestmentStageFilter] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://skillza.quest/investors/');
-        const fetchedInvestors = response.data;
-        setOriginalInvestors(fetchedInvestors);
-        setFilteredInvestors(fetchedInvestors);
+        setOriginalInvestors(response.data);
         console.log(response.data);
         console.log("Original Investors", originalInvestors);
+        setFilteredInvestors(response.data);
       } catch (error) {
         console.error("There was an error fetching the data", error);
       } finally {
@@ -32,25 +30,23 @@ const InvestorList = () => {
     fetchData();
   }, []);
   useEffect(() => {
-    const newFilters = {...filters, searchTerm: searchTerm};
+    const newFilters = {...filters, searchTerm: searchTerm, investmentStages: investmentStageFilter};
     const filteredList = filterInvestors(originalInvestors, newFilters);
     setFilteredInvestors(filteredList);
     console.log(newFilters.minAmount, newFilters.maxAmount)
-    console.log("Updated filters in InvestorList:", filters);
-  }, [filters, originalInvestors, searchTerm, investmentStageFilter]);
+    console.log("filtered list", filteredList);
+  }, [filters, originalInvestors, searchTerm]);
  
 
   const filterInvestors = (investors, filters) => {
-    console.log("Filters being used in InvestorList:", filters);
-
     return investors.filter((investor) => {
+      // Filter by Average Investment Amount
       if (
         (filters.minAmount !== undefined && investor.avgInvestmentAmount < filters.minAmount) ||
         (filters.maxAmount !== undefined && investor.avgInvestmentAmount > filters.maxAmount)
       ) {
         return false;
       }
-      
   
       // Filter by Invested Companies
       if (
@@ -60,7 +56,14 @@ const InvestorList = () => {
       ) {
         return false;
       }
-
+      if (
+        filters.investmentStages &&
+        filters.investmentStages.length > 0 &&
+        !filters.investmentStages.includes(investor.investmentStage)
+      ) {
+        return false;
+      }
+  
       // Filter by industries
       if (
         filters.industries && filters.industries.length > 0 &&
@@ -68,79 +71,106 @@ const InvestorList = () => {
       ) {
         return false;
       }
-  // Filter by Region
-  if (filters.region && filters.region.length > 0) {
-    const investorRegions = investor.geographicFocus.split(',').map(region => region.trim()); // Split by comma and trim each value
-    const hasMatchingRegion = filters.region.some(filterRegion => investorRegions.includes(filterRegion)); // Check if any filter matches any investor region
-    if (!hasMatchingRegion) {
-      return false;
-    }
-  }
-  if (
-    filters.grades &&
-    filters.grades.length > 0 &&
-    !filters.grades.includes(investor.grade)
-  ) {
-    return false;
-  }
-
-  // Filter by Tags
-  if (
-    filters.tags &&
-    !filters.tags.some((tag) => investor.tags.includes(tag))
-  ) {
-    return false;
-  }
-
-   // Filter by Reviews
-   if (filters.hasReviews && investor.reviews.length === 0) {
-    return false;
-  }
-
-  // Filter by Contact Person
-  if (
-    filters.contactPerson &&
-    investor.primaryContactName.toLowerCase() !== filters.contactPerson.toLowerCase()
-  ) {
-    return false;
-  }
-
-  // Filter by Investment Stage
-  const investorStages = investor.investmentStage.split(',').map(stage => stage.trim());
-  if (
-    filters.investmentStages &&
-    filters.investmentStages.length > 0 &&
-    !filters.investmentStages.some(stage => investorStages.includes(stage))
-  ) {
-    return false;
-  }
-
-  // General Search Term
-  if (filters.founderRatings && filters.founderRatings.length > 0 && filters.founderRatings.includes(0) && investor.rating === 0) {
-    console.log(filters.founderRatings);
-    return true;
-  }
   
-  if (
-    filters.founderRatings &&
-    filters.founderRatings.length > 0 &&
-    !filters.founderRatings.includes(investor.rating)
-  ) {
-    console.log("Filtering out investor due to rating mismatch:", investor.name, investor.rating);
-    return false;
-  }
-  if (
-    investor.type && filters.investorTypes && filters.investorTypes.length > 0 &&
-    !filters.investorTypes.includes(investor.type)
-  ) {
-    return false;
-  }
+      // Filter by Region
+      if (filters.region && filters.region.length > 0 && !filters.region.includes(investor.geographicFocus)) {
+        return false;
+      }
+      if (
+        filters.grades &&
+        filters.grades.length > 0 &&
+        !filters.grades.includes(investor.grade)
+      ) {
+        return false;
+      }
+  
+      // Filter by Tags
+      if (
+        filters.tags &&
+        !filters.tags.some((tag) => investor.tags.includes(tag))
+      ) {
+        return false;
+      }
+  
+      // Filter by Rating
+      if (filters.minRating && investor.rating < filters.minRating) {
+        return false;
+      }
+      if (filters.maxRating && investor.rating > filters.maxRating) {
+        return false;
+      }
+       // Filter by Reviews
+       if (filters.hasReviews && investor.reviews.length === 0) {
+        return false;
+      }
+  
+      // Filter by Contact Person
+      if (
+        filters.contactPerson &&
+        investor.primaryContactName.toLowerCase() !== filters.contactPerson.toLowerCase()
+      ) {
+        return false;
+      }
+  
+      // Filter by Investment Stage
+      if (
+        filters.investmentStage &&
+        !filters.investmentStage.includes(investor.investmentStage)
+      ) {
+        return false;
+      }
+  
+      // Filter by Investment Type
+      if (
+        filters.investorTypes &&
+        !filters.investorTypes.includes(investor.type)
+      ) {
+        return false;
+      }
+  
+      // General Search Term
       
+      if (
+        filters.founderRatings &&
+        filters.founderRatings.length > 0 &&
+        !filters.founderRatings.includes(investor.rating)
+      ) {
+        return false;
+      }
+      if (
+        filters.investorTypes &&
+        filters.investorTypes.length > 0 &&
+        !filters.investorTypes.includes(investor.investorType)
+      ) {
+        return false;
+      }
       return true;
     });
   };
-  console.log("Rerendering InvestorList. Current filters state:", filters);
-
+  const createMandate = async () => {
+    const investorData = filteredInvestors.map((investor) => {
+      return {
+        investorId: investor._id,
+        mandateStatus: 'new',  
+        events: [], 
+        notes: ''  
+      };
+    });
+    
+    const newMandate = {
+      mandateName: mandateName,
+      creatorId: userId,
+      investors: investorData 
+    };
+    
+    try {
+      const response = await axios.post('http://localhost:3001/mandates/create', newMandate);
+      console.log('New mandate created:', response.data);
+    } catch (error) {
+      console.error('Could not create mandate:', error);
+    }
+  };
+  
   if (loading) return <p>Loading...</p>;
   return (
     <>

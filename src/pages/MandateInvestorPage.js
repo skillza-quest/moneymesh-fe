@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Topbar from '../components/TopBar';
 
 const MandateInvestorPage = () => {
   const { mandateId, investorId } = useParams();
   const [investorData, setInvestorData] = useState(null); 
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('notesEvents');
 
   useEffect(() => {
     const fetchInvestorDetails = async () => {
@@ -76,86 +78,107 @@ const MandateInvestorPage = () => {
   const { investorDetails, investorInMandate } = investorData; // Assuming your API returns data in this structure
 
   return (
-    <div className='container mt-3'>
-      <section>
-        <h2>{investorDetails.name}</h2>
-        
-          <select value={investorInMandate.mandateStatus} onChange={(e) => updateStatus(e.target.value)}>
-            <option value="New">New</option>
-            <option value="Due Diligence Stage">Due Diligence Stage</option>
-            <option value="Termsheet Stage">Termsheet Stage</option>
-            <option value="Investment Committee Call">Investment Committee Call</option>
-            <option value="Partner Call">Partner Call</option>
-            <option value="Team Call">Team Call</option>
-            <option value="Responsed to Intro Email">Responsed to Intro Email</option>
-            <option value="Pending to Respond">Pending to Respond</option>
-            <option value="Pending to send Intro Email">Pending to send Intro Email</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        
-        <h4>Notes</h4>
-        <textarea 
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          rows="4"
-          cols="50"
-        />
-        <button onClick={saveNotes}>Save Notes</button>
-        <h4>Events</h4>
-        <ul>
-        {investorInMandate.events.reverse().map((event, idx) => (
-            <li key={idx}>
-            <i>{`${event.notes}`} <br /><small>{`${new Date(event.timestamp).toLocaleString()}`}</small></i>
+    <>
+      <Topbar />
+      <div className='container mt-3'>
+        <div className='row justify-content-between'>
+          <div className='col-12 col-md-7'>
+          <h2>{investorDetails.name}</h2>
+          
+            <select value={investorInMandate.mandateStatus} onChange={(e) => updateStatus(e.target.value)}>
+              <option value="New">New</option>
+              <option value="Due Diligence Stage">Due Diligence Stage</option>
+              <option value="Termsheet Stage">Termsheet Stage</option>
+              <option value="Investment Committee Call">Investment Committee Call</option>
+              <option value="Partner Call">Partner Call</option>
+              <option value="Team Call">Team Call</option>
+              <option value="Responsed to Intro Email">Responsed to Intro Email</option>
+              <option value="Pending to Respond">Pending to Respond</option>
+              <option value="Pending to send Intro Email">Pending to send Intro Email</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          <br /><br />
+          <ul className="nav nav-tabs">
+            <li className="nav-item">
+              <button className={`nav-link ${activeTab === 'notesEvents' ? 'active' : ''}`} onClick={() => setActiveTab('notesEvents')}>Notes & Events</button>
             </li>
-        ))}
-        </ul>
-      </section>
-
-      {/* Investor Details */}
+            <li className="nav-item">
+              <button className={`nav-link ${activeTab === 'investorDetails' ? 'active' : ''}`} onClick={() => setActiveTab('investorDetails')}>Investor Details</button>
+            </li>
+          </ul><br />
+          <div className="tab-content">
+    <div className={`tab-pane fade ${activeTab === 'notesEvents' ? 'show active' : ''}`}>
       <section>
-        <h3>Investor Details</h3>
-        <p>Name: {investorDetails.name}</p>
-      <p>Email: {investorDetails.contactEmail}</p>
-      <p>Phone: {investorDetails.contactPhone}</p>
-      <p>Avg Investment Amount: {investorDetails.avgInvestmentAmount}</p>
-      <p>Fund Size: {investorDetails.fundSize}</p>
-      <p>Geographic Focus: {investorDetails.geographicFocus}</p>
-      <p>Investment Stage: {investorDetails.investmentStage}</p>
-      <p>Primary Contact Name: {investorDetails.primaryContactName}</p>
-      <p>Primary Contact Position: {investorDetails.primaryContactPosition}</p>
-      <p>Rating: {investorDetails.rating}</p>
-      <p>Total Investments Made: {investorDetails.totalInvestmentsMade}</p>
-      <p>Type: {investorDetails.type}</p>
-      <p>Website: {investorDetails.website}</p>
-      <p>Time to Decision: {investorDetails.timeToDecision}</p>
-        <h4>Exit History</h4>
+          <p><strong>Add a note</strong></p>
+          <textarea 
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows="4"
+            cols="50"
+          /><br />
+          <button className='btn btn-primary mt-2' onClick={saveNotes}>Save Note</button><br /><br /><br />
+          <p><strong>Events</strong></p>
+          <ul>
+          {investorInMandate.events.reverse().map((event, idx) => (
+              <li key={idx}>
+              <i>{`${event.notes}`} <br /><small>{`${new Date(event.timestamp).toLocaleString()}`}</small></i>
+              </li>
+          ))}
+          </ul>
+          </section>
+    </div>
+    <div className={`tab-pane fade ${activeTab === 'investorDetails' ? 'show active' : ''}`}>
+      <section>
+          <h3>Investor Details</h3>
+          <p>Email: <a href={`mailto:${investorDetails.contactEmail}`}>{investorDetails.contactEmail}</a></p>
+        <p>Phone: {investorDetails.contactPhone}</p>
+        <p>Avg Investment Amount: {investorDetails.avgInvestmentAmount}</p>
+        <p>Fund Size: {investorDetails.fundSize}</p>
+        <p>Geographic Focus: {investorDetails.geographicFocus}</p>
+        <p>Investment Stage: {investorDetails.investmentStage}</p>
+        <p>Primary Contact Name: {investorDetails.primaryContactName}</p>
+        <p>Primary Contact Position: {investorDetails.primaryContactPosition}</p>
+        <p>Rating: {investorDetails.rating}</p>
+        <p>Total Investments Made: {investorDetails.totalInvestmentsMade}</p>
+        <p>Type: {investorDetails.type}</p>
+        <p>Website: {investorDetails.website}</p>
+        <p>Time to Decision: {investorDetails.timeToDecision}</p>
+          <h4>Exit History</h4>
+          <ul>
+            {investorDetails.exitHistory.map((exit, idx) => (
+              <li key={idx}>{exit}</li>
+            ))}
+          </ul>
+          <h4>Invested Companies</h4>
         <ul>
-          {investorDetails.exitHistory.map((exit, idx) => (
-            <li key={idx}>{exit}</li>
+          {investorDetails.investedCompanies.map((company, idx) => (
+            <li key={idx}>{company}</li>
           ))}
         </ul>
-        <h4>Invested Companies</h4>
-      <ul>
-        {investorDetails.investedCompanies.map((company, idx) => (
-          <li key={idx}>{company}</li>
-        ))}
-      </ul>
-      
-      <h4>Industry Focus</h4>
-      <ul>
-        {investorDetails.industryFocus.map((industry, idx) => (
-          <li key={idx}>{industry}</li>
-        ))}
-      </ul>
-      
-      <h4>Reviews</h4>
-      <ul>
-        {investorDetails.reviews.map((review, idx) => (
-          <li key={idx}>{review}</li>
-        ))}
-      </ul>
-      </section>
+        
+        <h4>Industry Focus</h4>
+        <ul>
+          {investorDetails.industryFocus.map((industry, idx) => (
+            <li key={idx}>{industry}</li>
+          ))}
+        </ul>
+        
+        <h4>Reviews</h4>
+        <ul>
+          {investorDetails.reviews.map((review, idx) => (
+            <li key={idx}>{review}</li>
+          ))}
+        </ul>
+        </section>
     </div>
+  </div>
+      </div>
+      </div>
+          <div className='col-12 col-md-4'>
+            &nbsp;
+          </div>
+        </div>
+    </>
   );
 };
 

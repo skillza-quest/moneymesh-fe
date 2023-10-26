@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import Topbar from '../components/TopBar';
 
 const MandatePage = () => {
   const { mandateId } = useParams();
@@ -10,8 +11,10 @@ const MandatePage = () => {
   const [inviteTokenInfo, setInviteTokenInfo] = useState(null);  // changed to null
   const [inviteLink, setInviteLink] = useState('');
   const { user } = useAuth0();
-
   const navigate = useNavigate();
+  const formatStatusForCSS = (status) => {
+    return status.toLowerCase().replace(/\s+/g, '-');
+  };
   const generateInvite = async () => {
     const response = await axios.post(`http://localhost:3001/mandates/generate-invite/${mandateId}`);
     const { token } = response.data;
@@ -66,34 +69,61 @@ const MandatePage = () => {
   if (!mandate) return <p>No such mandate found.</p>;
 
   return (
-    <div className='container mt-3'>
-        <h2>{mandate.mandateName}</h2>
-        <h3>Collaborators</h3>
-        <ul>
-        {mandate.collaborators ? mandate.collaborators.map((collaborator, idx) => (
-            <li key={idx}>{collaborator.name}</li>
-        )) : 'No collaborators.'}
-        </ul>
-        <h3>Investors</h3>
-        <ul>
-        {mandate.investors ? mandate.investors.map((investor, idx) => (
-            <li 
-            onClick={() => navigate(`/mandates/${mandateId}/investor/${investor.investorId._id}`)}
-            style={{ cursor: 'pointer' }}
-            key={idx}>
-            {investor.investorId.name} - {investor.mandateStatus}
-            </li>
-        )) : 'No investors.'}
-        </ul>
-        {(() => {
-            if (!inviteTokenInfo.tokenExists || inviteTokenInfo.tokenExpired) {
-                return <button onClick={generateInvite}>Generate Link</button>;
-            } else if (inviteTokenInfo.tokenExists && !inviteTokenInfo.tokenExpired) {
-                // if token exists, not expired, and not consumed, don't show button, show url
-                return <p>Share this link: {`http://localhost:3000/accept-invite/${inviteTokenInfo.token}`}</p>;
-            }
-        })()}
-    </div>
+    <>
+      <Topbar />
+      <div className='container mt-3'>
+        <div className="row justify-content-between">
+        <div className='col-12 col-md-7'>
+          
+          <h3>{mandate.mandateName}</h3><br />
+          <div className='flat-card'>
+            <p><strong>Investors</strong></p><br />
+            {mandate.investors && mandate.investors.length > 0 ? (
+              <table style={{ width: '100%' }}>
+                <tbody>
+                  {mandate.investors.map((investor, idx) => (
+                    <tr 
+                      onClick={() => navigate(`/mandates/${mandateId}/investor/${investor.investorId._id}`)} 
+                      style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
+                      key={idx}>
+                      <td style={{ padding: '10px' }}>{idx + 1}. {investor.investorId.name}</td>
+                      <td style={{ padding: '10px', textAlign: 'right' }}>
+                      <span className={`status-box status-${formatStatusForCSS(investor.mandateStatus)}`}>
+                          {investor.mandateStatus}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No investors.</p>
+            )}
+          </div>
+        </div>
+          <div className='col-12 col-md-4'><br /><br /><br />
+            <div className='flat-card'>
+            <p><strong>Collaborators</strong></p>
+            Invite one startup to collaborate with you on this investment mandate.
+            <br /><br />
+              <ul>
+              {mandate.collaborators ? mandate.collaborators.map((collaborator, idx) => (
+                  <li key={idx}>{collaborator.name}</li>
+              )) : 'No collaborators.'}
+              </ul>
+              {(() => {
+                  if (!inviteTokenInfo.tokenExists || inviteTokenInfo.tokenExpired) {
+                      return <button className='btn btn-secondary' onClick={generateInvite}>Generate Link</button>;
+                  } else if (inviteTokenInfo.tokenExists && !inviteTokenInfo.tokenExpired) {
+                      // if token exists, not expired, and not consumed, don't show button, show url
+                      return <p>Share this link: {`http://localhost:3000/accept-invite/${inviteTokenInfo.token}`}</p>;
+                  }
+              })()}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
