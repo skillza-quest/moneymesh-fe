@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
 import TopBar from '../components/TopBar'
-const InvestorList = () => {
+const CreateMandate = () => {
   const userId = localStorage.getItem('userId');
   const [originalInvestors, setOriginalInvestors] = useState([]); 
   const [filteredInvestors, setFilteredInvestors] = useState([]); 
@@ -192,6 +192,25 @@ const InvestorList = () => {
             </div>
             <div className="col-12 col-md-8 col-lg-8 col-xl-8">
                 <div className='row justify-content-center'>
+                <div className='col-12 col-md-12 mb-2'>
+                  <div className='flat-card'>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div className='mb-2'>
+                        <h5><strong>Create a Mandate</strong></h5>
+                        Use the filters on this page to create a custom list of investors that you can then collaborate on with your startups.<br />
+                      </div>
+                      <input 
+                        type="text" 
+                        className='form-control mb-2'
+                        style={{ flex: 1, maxWidth: 300 }}  // Takes up available space
+                        placeholder="Give this mandate a name" 
+                        value={mandateName} 
+                        onChange={(e) => setMandateName(e.target.value)}  // Set mandateName
+                      />
+                    <button className='btn btn-primary' style={{width: 300}} onClick={createMandate}>Create mandate with {filteredInvestors.length} Investors</button>
+                    </div>
+                  </div>
+                </div>
                   <div className='col-12 d-none'>
                     <div className="search-container">
                       <div className="search-icon">
@@ -200,6 +219,9 @@ const InvestorList = () => {
                       <input type="text" placeholder="Search Investors" className="search-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     </div>
                   </div>
+                </div>
+                <div className='col-12'>
+                <p><strong>&nbsp;&nbsp;Displaying {filteredInvestors.length} investors below:</strong></p>
                 </div>
                 <ul className='row'>
                     {filteredInvestors.map(filteredInvestor => (
@@ -223,4 +245,4 @@ const InvestorList = () => {
   );
 };
 
-export default InvestorList;
+export default CreateMandate;

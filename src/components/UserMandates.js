@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
+import TopBar from '../components/TopBar'
 
 const UserMandates = () => {
   const userId = localStorage.getItem('userId');
@@ -30,9 +31,19 @@ const UserMandates = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
+    <>
+    <TopBar />
     <div className='container mt-3'>
-      <div className='heading'>Your Mandates</div><br />
+    <p><strong>&nbsp;&nbsp;Your Mandates</strong></p>
       <ul className='row'>
+        <li className='col-12 col-md-6 col-lg-4 mb-3'>
+          <div className='card-ext' style={{backgroundColor: '#E7E6FE'}} onClick={() => navigate('/mandates/create')}>
+            <div style={{ textAlign: 'center' }}>
+              <big>+</big><br />
+              <strong>Create Mandate</strong>
+            </div>
+          </div>
+        </li>
         {mandates.map(mandate => (
             <li className='col-12 col-md-6 col-lg-4 mb-3' key={mandate._id}>
                 <div className='card-ext' onClick={() => handleCardClick(mandate._id)}>
@@ -42,6 +53,7 @@ const UserMandates = () => {
         ))}
       </ul>
     </div>
+    </>
   );
 };
 

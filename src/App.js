@@ -17,6 +17,7 @@ import MandateInvestorPage from './pages/MandateInvestorPage';
 import NewInvestorForm from './pages/NewInvestor';
 import UpdateInvestorForm from './pages/UpdateInvestor';
 import AcceptInvitePage from './components/AcceptInvite';
+import CreateMandate from './pages/CreateMandatePage';
 
 const RoleBasedRedirect = () => {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ function App() {
         <Route path="/investors/update/:id" element={<UpdateInvestorForm />} />
         <Route path="/investors/:id" element={<InvestorDetail />} />
         <Route path="/mandates" element={<UserMandates />} />
+        <Route path="/mandates/create" element={<CreateMandate />} />
         <Route path="/mandates/:mandateId" element={<MandatePage />} />
         <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
         <Route path="/mandates/:mandateId/investor/:investorId" element={<MandateInvestorPage />} />

@@ -102,7 +102,7 @@ const FiltersSidebar = ({ setFilters }) => {
       };
   return (
     <div className="filters-sidebar">
-      <div className="card-ext" style={{minHeight: 500}}>
+      <div style={{minHeight: 500}}>
         <div className="filter-section">
           <strong>INDUSTRY<br /></strong>
           <label>
