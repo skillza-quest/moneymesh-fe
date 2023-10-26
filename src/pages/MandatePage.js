@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Topbar from '../components/TopBar';
-
+import Loader from '../components/Loader';
 const MandatePage = () => {
   const { mandateId } = useParams();
   const [mandate, setMandate] = useState(null);
@@ -64,7 +64,7 @@ const MandatePage = () => {
     useEffect(() => {
       console.log('Updated inviteTokenInfo:', inviteTokenInfo);
    }, [inviteTokenInfo]);
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
 
   if (!mandate) return <p>No such mandate found.</p>;
 

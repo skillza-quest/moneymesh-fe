@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Topbar from '../components/TopBar';
-
+import Loader from '../components/Loader';
 const MandateInvestorPage = () => {
   const { mandateId, investorId } = useParams();
   const [investorData, setInvestorData] = useState(null); 
@@ -72,7 +72,7 @@ const MandateInvestorPage = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   if (!investorData) return <p>No such investor found within this mandate.</p>;
 
   const { investorDetails, investorInMandate } = investorData; // Assuming your API returns data in this structure

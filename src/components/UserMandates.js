@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
-import TopBar from '../components/TopBar'
-
+import TopBar from '../components/TopBar';
+import Loader from '../components/Loader';
 const UserMandates = () => {
   const userId = localStorage.getItem('userId');
   const [mandates, setMandates] = useState([]);
@@ -28,7 +28,7 @@ const UserMandates = () => {
     navigate(`/mandates/${mandateId}`);  // Use navigate to go to the specific mandate's page
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
 
   return (
     <>

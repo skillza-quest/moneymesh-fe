@@ -171,7 +171,7 @@ const InvestorList = () => {
     }
   };
   
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   return (
     <>
     <TopBar />

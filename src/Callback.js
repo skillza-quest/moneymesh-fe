@@ -27,7 +27,7 @@ const Callback = () => {
 
   return (
     <div>
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <Loader />}
       {!isLoading && !isAuthenticated && <p>Redirecting to login...</p>}
       {/* You can also display error messages here */}
     </div>

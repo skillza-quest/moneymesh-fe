@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Loader from '../components/Loader';
 
 const UpdateInvestorForm = () => {
   const { id } = useParams();
@@ -41,7 +42,7 @@ const UpdateInvestorForm = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
 
   return (
     <div className="container mt-3">

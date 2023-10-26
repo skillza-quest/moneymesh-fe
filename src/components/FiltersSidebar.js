@@ -142,40 +142,40 @@ const FiltersSidebar = ({ setFilters }) => {
     <div className="filters-sidebar">
       <div style={{minHeight: 500}}>
       <a onClick={clearFilters} style={{color: 'blue'}}>
-          <small><strong>Clear All Filters</strong></small>
+          <small><span className='btn btn-secondary'>Clear All Filters</span></small>
       </a><br /><br />
-      <div className="filter-section">
-          <strong>INVESTOR TYPE</strong><br />
-          <label>
+      <div>
+          <span className='filter-section'>INVESTOR TYPE<br /></span><br />
+          <label  className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="Family Office"
                         onChange={() => toggleInvestorType("Family Office")}
                     />&nbsp;
                     Family Office
-                </label><br />
-                <label>
+                </label>
+                <label  className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="VC"
                         onChange={() => toggleInvestorType("VC")}
                     />&nbsp;
                     VC
-                </label><br />
-                <label>
+                </label>
+                <label  className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="Syndicate"
                         onChange={() => toggleInvestorType("Syndicate")}
                     />&nbsp;
                     Syndicate
-                </label><br />
+                </label>
         </div><br />
-      <div className="filter-section">
-        <strong>INDUSTRY FOCUS<br /></strong>
+      <div>
+        <span className='filter-section'>INDUSTRY FOCUS<br /></span><br />
         {industries.map(industry => (
           <>
-          <label key={industry}>
+          <label className="custom-checkbox-label" key={industry}>
             &nbsp;&nbsp;<input
               type="checkbox"
               value={industry}
@@ -187,52 +187,52 @@ const FiltersSidebar = ({ setFilters }) => {
         ))}
       </div>
 
-        <div className="filter-section"><br />
-          <strong>REGION</strong><br />
-          <label>
+        <div><br />
+          <span className='filter-section'>REGION<br /></span><br />
+          <label className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="India"
                         onChange={() => toggleGeographicFocus("India")}
                     />&nbsp;
                     India
-                </label><br />
-                <label>
+                </label>
+                <label  className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="MENA"
                         onChange={() => toggleGeographicFocus("MENA")}
                     />&nbsp;
                     MENA
-                </label><br />
-                <label>
+                </label>
+                <label  className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="Dubai"
                         onChange={() => toggleGeographicFocus("Dubai")}
                     />&nbsp;
                     Dubai
-                </label><br />
-                <label>
+                </label>
+                <label  className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="US"
                         onChange={() => toggleGeographicFocus("US")}
                     />&nbsp;
                     US
-                </label><br />
-                <label>
+                </label>
+                <label  className="custom-checkbox-label">
                     <input
                         type="checkbox"
                         value="Asia"
                         onChange={() => toggleGeographicFocus("Asia")}
                     />&nbsp;
                     Asia
-                </label><br />
+                </label>
         </div>
 
-        <div className="filter-section"><br />
-        <strong>INVESTMENT AMOUNT<br /></strong><br />
+        <div><br />
+        <span className='filter-section'>INVESTMENT AMOUNT<br /></span><br />
           <Slider
             rootStyle={sliderStyle}
             domain={[0, 5000000]}
@@ -318,10 +318,10 @@ const FiltersSidebar = ({ setFilters }) => {
             </Tracks>
           </Slider>
         </div><br /><br />
-        <div className="filter-section">
-          <strong>INVESTMENT STAGE</strong><br />
+        <div>
+          <span className='filter-section'>INVESTMENT STAGE<br /></span><br />
           {investmentStages.map((stage) => (
-            <label key={stage}>
+            <label className="custom-checkbox-label" key={stage}>
               <input
                 type="checkbox"
                 value={stage}
@@ -332,49 +332,49 @@ const FiltersSidebar = ({ setFilters }) => {
             </label>
           ))}
         </div><br />
-        <div className="filter-section">
-          <strong>RATING</strong><br />
-          <label>
+        <div>
+          <span className='filter-section'>RATING<br /></span><br />
+          <label className="custom-checkbox-label">
             <input
               type="checkbox"
               value="5"
               onChange={() => toggleFounderRating("5")}
             />&nbsp;
             ★★★★★
-          </label><br />
-          <label>
+          </label>
+          <label  className="custom-checkbox-label">
             <input
               type="checkbox"
               value="4"
               onChange={() => toggleFounderRating("4")}
             />&nbsp;
             ★★★★
-          </label><br />
-          <label>
+          </label>
+          <label  className="custom-checkbox-label">
             <input
               type="checkbox"
               value="3"
               onChange={() => toggleFounderRating("3")}
             />&nbsp;
             ★★★
-          </label><br />
-          <label>
+          </label>
+          <label  className="custom-checkbox-label">
             <input
               type="checkbox"
               value="2"
               onChange={() => toggleFounderRating("2")}
             />&nbsp;
             ★★
-          </label><br />
-          <label>
+          </label>
+          <label  className="custom-checkbox-label">
             <input
               type="checkbox"
               value="1"
               onChange={() => toggleFounderRating("1")}
             />&nbsp;
             ★
-          </label><br />
-          <label>
+          </label>
+          <label  className="custom-checkbox-label">
             <input
               type="checkbox"
               value="0"

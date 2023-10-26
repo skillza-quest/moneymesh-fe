@@ -23,7 +23,7 @@ const InvestorDetail = () => {
   const tabContent = {
     Info: (
       <div><br />
-      {investorDetails.description}<br /><br /><br />    
+      {investorDetails.description}<br />    
         <div class="row">
                 <div class="col-12">
                   <strong>Investment Stages:</strong>{investorDetails.investmentStage}<br /><br />
@@ -95,7 +95,7 @@ const InvestorDetail = () => {
             </Link>
             <br />
             <br />
-            <div class="card-ext" style={{minHeight: 500}}>
+            <div class="flat-card" style={{minHeight: 500}}>
               <div className="investor-details-page">
                   <div>
                     <div className="investor-details-page">

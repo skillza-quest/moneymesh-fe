@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
 import TopBar from '../components/TopBar'
+import Loader from '../components/Loader';
 const InvestorList = () => {
   const userId = localStorage.getItem('userId');
   const [originalInvestors, setOriginalInvestors] = useState([]); 
@@ -141,7 +142,7 @@ const InvestorList = () => {
   };
   console.log("Rerendering InvestorList. Current filters state:", filters);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   return (
     <>
     <TopBar />
@@ -169,10 +170,8 @@ const InvestorList = () => {
                         <div className='card-ext'>
                           <Link to={`/investors/${filteredInvestor._id}`}>
                             <big><strong>{filteredInvestor.name}</strong></big><br />
-                            <small>
                               {filteredInvestor.website}<br />
                               <strong>Avg. Check:</strong> USD {filteredInvestor.avgInvestmentAmount}
-                            </small>
                           </Link>
                         </div>
                       </li>

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
-import TopBar from '../components/TopBar'
+import TopBar from '../components/TopBar';
+import Loader from '../components/Loader';
 const CreateMandate = () => {
   const userId = localStorage.getItem('userId');
   const [originalInvestors, setOriginalInvestors] = useState([]); 
@@ -161,7 +162,7 @@ const CreateMandate = () => {
     }
   };
   
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   return (
     <>
     <TopBar />
@@ -178,7 +179,7 @@ const CreateMandate = () => {
                   <div className='flat-card'>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div className='mb-2'>
-                        <h5><strong>Create a Mandate</strong></h5>
+                        <big><strong>Create a Mandate</strong></big><br />
                         Use the filters on this page to create a custom list of investors that you can then collaborate on with your startups.<br />
                       </div>
                       <input 
@@ -211,10 +212,8 @@ const CreateMandate = () => {
                         <div className='card-ext'>
                           <Link to={`/investors/${filteredInvestor._id}`}>
                             <big><strong>{filteredInvestor.name}</strong></big><br />
-                            <small>
                               {filteredInvestor.website}<br />
                               <strong>Avg. Check:</strong> USD {filteredInvestor.avgInvestmentAmount}
-                            </small>
                           </Link>
                         </div>
                       </li>

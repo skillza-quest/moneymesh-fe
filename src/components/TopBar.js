@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import { NavLink, useNavigate } from 'react-router-dom';
-
+import logo from '../assets/logo.png';
 const Topbar = () => {
   const { logout } = useAuth0();
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Topbar = () => {
       <div className="container">
         {/* Logo (left-aligned) */}
         <a className="navbar-brand" href="#">
-          <strong style={{ color: 'rgb(65, 61, 247)', fontWeight: 800 }}>moneymesh</strong>
+          <img src={logo} width={130} />
         </a>
 
         {/* Menu button (hamburger icon) */}

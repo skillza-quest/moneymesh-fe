@@ -17,12 +17,14 @@
 }
 
 body {
-  font-family: 'Aeonik' !important;
+  font-family: 'Manrope' !important;
   background-color: #FFFFFF !important;
+  color: #101828;
+  font-size: 14px !important;
 }
 
 strong {
-  font-family: 'Aeonik Bold';
+  font-weight: 500;
 }
 
 
@@ -33,11 +35,11 @@ ul {
 
 
 :focus-visible {
-  outline: rgb(65, 61, 247) auto 1px;
+  outline: #7F56D9 auto 1px;
 }
 
 .active-link {
-  color: rgb(65, 61, 247);
+  color: #7F56D9;
 }
 .navbar {
   box-shadow: 0 2px 5px rgba(240,240,240,0.1);
@@ -45,6 +47,10 @@ ul {
 }
 .nav-item {
   margin-right: 20px; /* Add spacing between menu items */
+}
+
+.nav-link, a {
+  color: #7F56D9 !important;
 }
 
 .investor-list {
@@ -57,7 +63,7 @@ ul {
   border-width: 1px;
   padding: 33px 20px 25px;
   border-color: rgba(193, 200, 219, 0.5);
-  border-radius: 20px;
+  border-radius: 8px;
   border-style: solid;
   margin-bottom: 20px;
   width:100%;
@@ -68,7 +74,7 @@ ul {
   border-width: 1px;
     padding: 33px 20px 25px;
     border-color: rgba(193, 200, 219, 0.5);
-    border-radius: 20px;
+    border-radius: 8px;
     border-style: solid;
     margin-bottom: 20px;
 }
@@ -80,11 +86,11 @@ ul {
 
 .card-ext {
   background: #fff;
-  border-radius: 20px;
+  border-radius: 8px;
   overflow: hidden;
   height: 100% !important;
   width: 300px;
-  box-shadow: 0px 0px 25px rgba(100, 100, 100, 0.1);  
+  box-shadow: 0px 0px 25px rgba(150, 150, 150, 0.1);  
   width: 100%;
   text-decoration: none;
   border-width: 0 !important;
@@ -94,14 +100,14 @@ ul {
 }
 
 .card-ext:hover {
-  box-shadow: inset 0 0 4px rgb(65, 61, 247, 0.2);
+  box-shadow: inset 0 0 4px rgb(127, 86, 217, 0.2);
   cursor: pointer;
 }
 
-.filter-section strong {
-  font-size: 8pt;
-  margin-bottom:50px;
-  color: #898989;
+.filter-section {
+  font-size: 9pt;
+  color: #667085;
+  font-weight: bold;
 }
 a {
   color: #101010 !important;
@@ -147,13 +153,13 @@ a {
   border-radius: 16px;
   text-transform: uppercase;
   font-size: 0.8em;
-  font-family: 'Inter';
+  font-family: 'Manrope';
   letter-spacing: 0.5px;
 }
 
 .status-new {
   background-color: #DFEAFF;
-  color: #1066FF;
+  color: #7F56D9;
 }
 
 .status-cold {
@@ -170,3 +176,109 @@ a {
   background-color: #FFD6BF;
   color: #FB7E62;
 }
+
+
+
+
+
+
+/* new theme */
+
+.btn {
+  color: var(--White, #FFF);
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; 
+  border-radius: 4px !important;
+}
+.btn-primary {
+  border-radius: 8px;
+  border: 1px solid var(--primary-600, #7F56D9) !important;
+  background: var(--primary-600, #7F56D9) !important;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  display: flex;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+}
+
+.btn-secondary {
+  display: flex;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  border-radius: 8px;
+  border: 1px solid #D0D5DD !important;
+  color: #344054 !important;
+  background: #FFFFFF !important;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.form-control {
+  display: flex;
+  padding: 10px 14px;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--gray-300, #D0D5DD);
+  background: var(--White, #FFF);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+/* Custom Checkbox Styling */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;  /* Adjust as needed for the desired size */
+  height: 20px; /* Adjust as needed for the desired size */
+  border: 2px solid rgba(193, 200, 219, 0.2);
+  border-radius: 8px;
+  transition: background-color 120ms ease 0s, box-shadow 250ms ease 0s;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+/* Styling for when checkbox is checked */
+input[type="checkbox"]:checked {
+  background-color: #7F56D9;
+  border-color: #7F56D9;
+}
+
+/* Styling for the tick mark when checkbox is checked */
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white; /* Tick mark color when checked */
+  font-size: 16px; /* Adjust as needed for the desired size */
+  
+}
+
+.custom-checkbox-label {
+  display: flex;
+  align-items: center; /* This ensures vertical alignment */
+  cursor: pointer;
+}
+
+/* If the label text is not wrapped in any element */
+.custom-checkbox-label > input[type="checkbox"] + span {
+  margin-left: 8px; /* Adjust this value for desired spacing */
+  vertical-align: middle;
+}
+
+/* If the label text is wrapped in an element, adjust accordingly */
+.custom-checkbox-label > input[type="checkbox"] + div/span/p {
+  margin-left: 8px; /* Adjust this value for desired spacing */
+  vertical-align: middle;
+}
+
