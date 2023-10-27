@@ -289,3 +289,11 @@ input[type="checkbox"]:checked::after {
   background-image: url('../src/assets/moneyplantgrowth.png'); 
   background-size: cover;
 }
+
+.flexContainer {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;  
+  width: 100%;  
+}
+

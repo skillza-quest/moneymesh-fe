@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Topbar from '../components/TopBar';
 import Loader from '../components/Loader';
+import StyledSelect from '../components/StyledSelect';
 const MandateInvestorPage = () => {
   const { mandateId, investorId } = useParams();
   const [investorData, setInvestorData] = useState(null); 
@@ -56,21 +57,28 @@ const MandateInvestorPage = () => {
   };
   const updateStatus = async (newStatus) => {
     try {
-      const response = await axios.patch(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investors/${investorId}/status`, { status: newStatus });
-      console.log('Status updated:', response.data);
-      
-      // Update local state
-      setInvestorData({
-        ...investorData,
-        investorInMandate: {
-          ...investorData.investorInMandate,
-          mandateStatus: newStatus,
-        },
-      });
+        const response = await axios.patch(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investors/${investorId}/status`, { status: newStatus });
+        console.log('Status updated:', response.data);
+
+        const event = {
+            type: "status",
+            details: `Status changed from ${investorData.investorInMandate.mandateStatus} to ${newStatus}`,
+            date: new Date(),
+            status: `${newStatus}`
+        };
+        setInvestorData({
+            ...investorData,
+            investorInMandate: {
+                ...investorData.investorInMandate,
+                mandateStatus: newStatus,
+                events: [...investorData.investorInMandate.events, event] // Add the new event to the events array
+            },
+        });
     } catch (error) {
-      console.error('Could not update status:', error);
+        console.error('Could not update status:', error);
     }
-  };
+};
+
 
   if (loading) return <Loader />;
   if (!investorData) return <p>No such investor found within this mandate.</p>;
@@ -81,22 +89,25 @@ const MandateInvestorPage = () => {
     <>
       <Topbar />
       <div className='container mt-3'>
-        <div className='row justify-content-between'>
+        <div className='row justify-content-center'>
           <div className='col-12 col-md-7'>
-          <h2>{investorDetails.name}</h2>
-          
-            <select value={investorInMandate.mandateStatus} onChange={(e) => updateStatus(e.target.value)}>
-              <option value="New">New</option>
-              <option value="Due Diligence Stage">Due Diligence Stage</option>
-              <option value="Termsheet Stage">Termsheet Stage</option>
-              <option value="Investment Committee Call">Investment Committee Call</option>
-              <option value="Partner Call">Partner Call</option>
-              <option value="Team Call">Team Call</option>
-              <option value="Responsed to Intro Email">Responsed to Intro Email</option>
-              <option value="Pending to Respond">Pending to Respond</option>
-              <option value="Pending to send Intro Email">Pending to send Intro Email</option>
-              <option value="Rejected">Rejected</option>
-            </select>
+          <div className="flexContainer">
+            <h3><strong>{investorDetails.name}</strong></h3>
+            <div className="selectContainer">
+              <StyledSelect value={investorInMandate.mandateStatus} onChange={(e) => updateStatus(e.target.value)}>
+                <option value="New">New</option>
+                <option value="Due Diligence Stage">Due Diligence Stage</option>
+                <option value="Termsheet Stage">Termsheet Stage</option>
+                <option value="Investment Committee Call">Investment Committee Call</option>
+                <option value="Partner Call">Partner Call</option>
+                <option value="Team Call">Team Call</option>
+                <option value="Responsed to Intro Email">Responsed to Intro Email</option>
+                <option value="Pending to Respond">Pending to Respond</option>
+                <option value="Pending to send Intro Email">Pending to send Intro Email</option>
+                <option value="Rejected">Rejected</option>
+              </StyledSelect>
+            </div>
+        </div>
           <br /><br />
           <ul className="nav nav-tabs">
             <li className="nav-item">
@@ -121,7 +132,7 @@ const MandateInvestorPage = () => {
           <ul>
           {investorInMandate.events.reverse().map((event, idx) => (
               <li key={idx}>
-              <i>{`${event.notes}`} <br /><small>{`${new Date(event.timestamp).toLocaleString()}`}</small></i>
+              <i>{`${event.notes}`} <br /><small>{`${new Date(event.timestamp).toLocaleString()}`}</small></i><br /><br />
               </li>
           ))}
           </ul>
@@ -129,7 +140,7 @@ const MandateInvestorPage = () => {
     </div>
     <div className={`tab-pane fade ${activeTab === 'investorDetails' ? 'show active' : ''}`}>
       <section>
-          <h3>Investor Details</h3>
+          <h5>Investor Details</h5>
           <p>Email: <a href={`mailto:${investorDetails.contactEmail}`}>{investorDetails.contactEmail}</a></p>
         <p>Phone: {investorDetails.contactPhone}</p>
         <p>Avg Investment Amount: {investorDetails.avgInvestmentAmount}</p>

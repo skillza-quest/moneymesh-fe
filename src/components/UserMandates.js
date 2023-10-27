@@ -13,6 +13,7 @@ const UserMandates = () => {
       try {
         // Replace with your actual API endpoint
         const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/user/${userId}`);
+        console.log("userMandates", response.data);
         setMandates(response.data);
         
       } catch (error) {
@@ -37,9 +38,9 @@ const UserMandates = () => {
     <p><strong>&nbsp;&nbsp;Your Mandates</strong></p>
       <ul className='row'>
         <li className='col-12 col-md-6 col-lg-4 mb-3'>
-          <div className='card-ext' style={{backgroundColor: '#E7E6FE'}} onClick={() => navigate('/mandates/create')}>
+          <div className='card-ext' onClick={() => navigate('/mandates/create')}>
             <div style={{ textAlign: 'center' }}>
-              <big>+</big><br />
+              <big style={{fontSize: 24}}>+</big><br />
               <strong>Create Mandate</strong>
             </div>
           </div>
@@ -47,7 +48,9 @@ const UserMandates = () => {
         {mandates.map(mandate => (
             <li className='col-12 col-md-6 col-lg-4 mb-3' key={mandate._id}>
                 <div className='card-ext' onClick={() => handleCardClick(mandate._id)}>
-                <big><strong>{mandate.mandateName}</strong></big><br /><br />
+                <big><strong>{mandate.mandateName}</strong></big><br />
+                <small>{mandate.investors.length} Investors</small><br />
+                <small>{mandate.collaboratorIds.length + 1} Collaborators</small><br />
                 </div>
             </li>
         ))}

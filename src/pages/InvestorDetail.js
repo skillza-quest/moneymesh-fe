@@ -24,57 +24,62 @@ const InvestorDetail = () => {
     Info: (
       <div><br />
       {investorDetails.description}<br />    
-        <div class="row">
-                <div class="col-12">
-                  <strong>Investment Stages:</strong>{investorDetails.investmentStage}<br /><br />
+        <div className="row">
+                <div className='col-12 col-md-4'>
+                  {investorDetails.type && <div><strong>Type:</strong><br /> {investorDetails.type}</div>}
+                </div>
+                <div className="col-12 col-md-4">
+                  <strong>Investment Stages:</strong><br />{investorDetails.investmentStage}<br /><br />
+                </div>
+                <div className="col-12 col-md-4">
+                  <strong>Time To Decision: </strong><br />{investorDetails.timeToDecision} <br /><br />
                 </div>
               </div><br />
-              <div class="row">
-                <div class="col-12 col-md-4"><strong>Avg. Check:</strong> USD {investorDetails.averageInvestmentAmount}</div>
-                <div class="col-12 col-md-4"><strong>Fund Size:</strong> {investorDetails.fundSize && <div>{investorDetails.fundSize}</div>}</div>
-                <div class="col-12 col-md-4"><strong>Investments Made:</strong>  {investorDetails.totalInvestmentsMade && <div>{investorDetails.totalInvestmentsMade}</div>}</div>
+              <div className="row">
+                <div className="col-6 col-md-4"><strong>Avg. Check:</strong><br /> USD {investorDetails.averageInvestmentAmount}</div>
+                <div className="col-6 col-md-4"><strong>Fund Size:</strong><br /> {investorDetails.fundSize && <div>{investorDetails.fundSize}</div>}</div>
+                <div className="col-6 col-md-4"><strong>Investments Made:</strong><br />  {investorDetails.totalInvestmentsMade && <div>{investorDetails.totalInvestmentsMade}</div>}</div>
               </div>
-              <br />
-              <div class="row">
-                <div class="col-12 col-md-4"><strong>Geographic Focus</strong> {investorDetails.geographicFocus}</div>
-                <div class="col-12 col-md-4"><strong>Industries</strong> {investorDetails.industries && investorDetails.industries.join(', ')}</div>
-                <div class="col-12 col-md-4"><strong>Tags</strong> {investorDetails.tags && investorDetails.tags.join(', ')}</div>
+              <br /><br />
+              <div className="row">
+                <div className="col-6 col-md-4"><strong>Geographic Focus</strong><br /> {investorDetails.geographicFocus}</div>
+                <div className="col-6 col-md-4"><strong>Industries</strong><br /> {investorDetails.industries && investorDetails.industries.join(', ')}</div>
+                <div className="col-6 col-md-4"><strong>Tags</strong><br /> {investorDetails.tags && investorDetails.tags.join(', ')}</div>
               </div>
               <br />
              
               
               <br />
-              <div class="row">
-                <div class="col-12">
+              <div className="row">
+                <div className="col-12">
                   <strong>Notes:</strong><br />
                   {investorDetails.notes}
                 </div>
               </div>
               <br /><br /><br />
               <small style={{opacity: 0.3}}>
-                <strong>Time To Decision: </strong>{investorDetails.timeToDecision} <br />
                 <strong>Status: </strong>{investorDetails.status} <br />
                 <strong>Last Updated:</strong>{new Date(investorDetails.lastUpdated).toLocaleString()}
               </small>
       </div>
     ),
     'Reviews': (
-      <div class="row">
-                <div class="col-12 col-md-6">
+      <div className="row">
+                <div className="col-12 col-md-6">
                   <strong>Rating:</strong> {investorDetails.rating && <div>{investorDetails.rating}</div>}
                 </div>
-                <div class="col-12 col-md-6">
+                <div className="col-12 col-md-6">
                   <strong>Grade:</strong> {investorDetails.grade && <div> {investorDetails.grade}</div>}
                 </div><br /><br />
-                <div class="col-12">
+                <div className="col-12">
                   <strong>Reviews:</strong><br /> {investorDetails.reviews && <div> {investorDetails.reviews && investorDetails.reviews.join(', ')}</div>}<br />
                 </div>
               </div>
     ),
     People: (
       <div>
-         <div class="row">
-                <div class="col-12">
+         <div className="row">
+                <div className="col-12">
                   {investorDetails.primaryContactPerson?.name && <div>Primary Contact: {investorDetails.primaryContactPerson.name}, {investorDetails.primaryContactPerson.position}</div>}
                   {investorDetails.contactEmail && <div>Contact Email: {investorDetails.contactEmail}</div>}
                   {investorDetails.contactPhone && <div>Contact Phone: {investorDetails.contactPhone}</div>}<br />
@@ -95,13 +100,11 @@ const InvestorDetail = () => {
             </Link>
             <br />
             <br />
-            <div class="flat-card" style={{minHeight: 500}}>
+            <div className="flat-card" style={{minHeight: 500}}>
               <div className="investor-details-page">
                   <div>
                     <div className="investor-details-page">
-                      <h1><strong>{investorDetails.name}</strong></h1>
-
-                      {investorDetails.type && <div>Type: {investorDetails.type}</div>}
+                      <h3><strong>{investorDetails.name}</strong></h3>
                       {investorDetails.website}<br /><br />
                     </div>
                   </div>
