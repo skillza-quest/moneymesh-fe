@@ -45,6 +45,12 @@ const InvestorList = () => {
     console.log("Filters being used in InvestorList:", filters);
 
     return investors.filter((investor) => {
+      const term = searchTerm.toLowerCase();
+      if (searchTerm && 
+          !(investor.name && investor.name.toLowerCase().includes(term))
+      ) {
+        return false;
+      }
       if (
         (filters.minAmount !== undefined && investor.avgInvestmentAmount < filters.minAmount) ||
         (filters.maxAmount !== undefined && investor.avgInvestmentAmount > filters.maxAmount)
@@ -116,7 +122,6 @@ const InvestorList = () => {
     return false;
   }
 
-  // General Search Term
   if (filters.founderRatings && filters.founderRatings.length > 0 && filters.founderRatings.includes(0) && investor.rating === 0) {
     console.log(filters.founderRatings);
     return true;
@@ -155,7 +160,7 @@ const InvestorList = () => {
             </div>
             <div className="col-12 col-md-8 col-lg-8 col-xl-8">
                 <div className='row justify-content-center'>
-                  <div className='col-12 d-none'>
+                  <div className='col-12'>
                     <div className="search-container">
                       <div className="search-icon">
                         <i className="fa fa-search" style={{color: 'rgb(65, 61, 247)'}}></i> 

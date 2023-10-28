@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Topbar from '../components/TopBar';
 import Loader from '../components/Loader';
+import icRightArrow from '../assets/ic-right-arrow.png'
 const MandatePage = () => {
   const { mandateId } = useParams();
   const [mandate, setMandate] = useState(null);
@@ -90,7 +91,8 @@ const MandatePage = () => {
                       <td style={{ padding: '10px', textAlign: 'right' }}>
                       <span className={`status-box status-${formatStatusForCSS(investor.mandateStatus)}`}>
                           {investor.mandateStatus}
-                        </span>
+                        </span>&nbsp;&nbsp;&nbsp;
+                        <img src={icRightArrow} width="10px" />
                       </td>
                     </tr>
                   ))}
@@ -103,9 +105,9 @@ const MandatePage = () => {
         </div>
           <div className='col-12 col-md-4'><br /><br /><br />
             <div className='flat-card'>
-            <p><strong>Collaborators</strong></p>
-            Invite one startup to collaborate with you on this investment mandate.
-            <br /><br />
+              <p><strong>Collaborators</strong></p>
+              Invite a startup to collaborate with you on this investment mandate.
+              <br /><br />
               <ul>
               {mandate.collaborators ? mandate.collaborators.map((collaborator, idx) => (
                   <li key={idx}>{collaborator.name}</li>
@@ -116,7 +118,7 @@ const MandatePage = () => {
                       return <button className='btn btn-secondary' onClick={generateInvite}>Generate Link</button>;
                   } else if (inviteTokenInfo.tokenExists && !inviteTokenInfo.tokenExpired) {
                       // if token exists, not expired, and not consumed, don't show button, show url
-                      return <p>Share this link: {`http://localhost:3000/accept-invite/${inviteTokenInfo.token}`}</p>;
+                      return <p style={{padding:10, backgroundColor:'#EFEFFE'}}>Share this link: <br /><strong>{`${process.env.REACT_APP_FRONTEND_URL}/accept-invite/${inviteTokenInfo.token}`}</strong></p>;
                   }
               })()}
             </div>

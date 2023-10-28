@@ -35,18 +35,8 @@ const Topbar = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/startups" className="active-link">
-                 Startups
-              </NavLink>
-            </li>
-            <li className="nav-item">
               <NavLink to="/people" className="active-link">
                 People
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/profile" className="active-link">
-                Profile
               </NavLink>
             </li>
             <li className="nav-item" onClick={() => logout()}>

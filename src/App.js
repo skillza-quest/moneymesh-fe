@@ -6,6 +6,7 @@ import InvestorDetail from './pages/InvestorDetail';
 import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
 import ProfilePage from './pages/ProfilePage';
+import PeoplePage from './pages/PeoplePage';
 import Loader from './components/Loader';
 import './App.css';
 
@@ -74,6 +75,7 @@ function App() {
         <Route path="/investors/update/:id" element={<UpdateInvestorForm />} />
         <Route path="/investors/:id" element={<InvestorDetail />} />
         <Route path="/mandates" element={<UserMandates />} />
+        <Route path="/people" element={<PeoplePage />} />
         <Route path="/mandates/create" element={<CreateMandate />} />
         <Route path="/mandates/:mandateId" element={<MandatePage />} />
         <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />

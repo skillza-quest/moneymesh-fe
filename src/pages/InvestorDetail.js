@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import TopBar from '../components/TopBar';
-
+import icProfile from '../assets/ic-profile.png'
 const InvestorDetail = () => {
   const { id } = useParams();
   const [investorDetails, setInvestorDetails] = useState({});
@@ -24,7 +24,7 @@ const InvestorDetail = () => {
     Info: (
       <div><br />
       {investorDetails.description}<br />    
-        <div className="row">
+              <div className="row">
                 <div className='col-12 col-md-4'>
                   {investorDetails.type && <div><strong>Type:</strong><br /> {investorDetails.type}</div>}
                 </div>
@@ -77,15 +77,23 @@ const InvestorDetail = () => {
               </div>
     ),
     People: (
-      <div>
-         <div className="row">
-                <div className="col-12">
-                  {investorDetails.primaryContactPerson?.name && <div>Primary Contact: {investorDetails.primaryContactPerson.name}, {investorDetails.primaryContactPerson.position}</div>}
-                  {investorDetails.contactEmail && <div>Contact Email: {investorDetails.contactEmail}</div>}
-                  {investorDetails.contactPhone && <div>Contact Phone: {investorDetails.contactPhone}</div>}<br />
+      <div className="profile-section">
+        <div className="row mt-4">
+            <div className="col-12 d-flex align-items-center">
+                <img src={icProfile} width="60px" className="mr-3" alt="Profile" />
+                <div>
+                    {investorDetails.primaryContactName && (
+                        <div>
+                            <strong>{investorDetails.primaryContactName}</strong><br />
+                            {investorDetails.primaryContactPosition}<br />
+                        </div>
+                    )}
+                    {investorDetails.contactEmail && <div>{investorDetails.contactEmail}</div>}
+                    {investorDetails.contactPhone && <div>{investorDetails.contactPhone}</div>}
                 </div>
-              </div><br />
-      </div>
+            </div>
+        </div>
+     </div>
     ),
   };
 
