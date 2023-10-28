@@ -26,22 +26,22 @@ const RoleBasedRedirect = () => {
   const { user, isAuthenticated } = useAuth0();
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [userRole, setUserRole] = useState(localStorage.getItem('userRole'));
-
   useEffect(() => {
-    if (isAuthenticated && user && user['https://moneymesh.com/roles']) {
-      const roles = user['https://moneymesh.com/roles'];
+    if (isAuthenticated && user && user['dev-hxnqq1jp5xvm1err.us.auth0.com/roles']) {
+      const roles = user['dev-hxnqq1jp5xvm1err.us.auth0.com/roles'];
       setUserId(user.sub);
       localStorage.setItem('userId', user.sub);
+      console.log(user);
 
-      if (roles.includes('Admin')) {
+      if (roles?.includes('Admin')) {
         setUserRole('Admin');
         localStorage.setItem('userRole', 'Admin');
         navigate('/bulk-upload');
-      } else if (roles.includes('Investor')) {
+      } else if (roles?.includes('Investor')) {
         setUserRole('Investor');
         localStorage.setItem('userRole', 'Investor');
         navigate('/mandates/create');
-      } else if (roles.includes('Startup')) {
+      } else if (roles?.includes('Startup')) {
         setUserRole('Startup');
         localStorage.setItem('userRole', 'Startup');
         navigate('/mandates');

@@ -192,7 +192,7 @@ const CreateMandate = () => {
                       />
                     <button className='btn btn-primary' style={{width: 300}} onClick={createMandate}>Create mandate with {filteredInvestors.length} Investors</button>
                     </div>
-                    <div className="illustration"></div>
+                    <div className="illustration d-none d-md-block"></div>
                   </div>
                 </div>
                   <div className='col-12 d-none'>

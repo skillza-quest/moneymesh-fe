@@ -5,7 +5,8 @@ import logo from '../assets/logo.png';
 const Topbar = () => {
   const { logout } = useAuth0();
   const navigate = useNavigate();
-
+  const userRole = localStorage.getItem('userRole');
+  console.log("userRole is", userRole);
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light bg-white mb-4">
       <div className="container">
@@ -29,16 +30,20 @@ const Topbar = () => {
                 Mandates
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/investors" className="active-link">
-                Investors
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/people" className="active-link">
-                People
-              </NavLink>
-            </li>
+            {userRole !== 'Startup' && (
+                <>
+                    <li className="nav-item">
+                        <NavLink to="/investors" className="active-link">
+                            Investors
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to="/people" className="active-link">
+                            People
+                        </NavLink>
+                    </li>
+                </>
+            )}
             <li className="nav-item" onClick={() => logout()}>
               <NavLink to="/profile" className="active-link">
                 Logout

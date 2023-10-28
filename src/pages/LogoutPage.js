@@ -5,7 +5,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const LogoutButton = () => {
   const { logout } = useAuth0();
-
+  localStorage.clear();
+  console.log("userRole is", localStorage.getItem('userRole'));
   return <button onClick={() => logout()}>Log Out</button>;
 };
 
