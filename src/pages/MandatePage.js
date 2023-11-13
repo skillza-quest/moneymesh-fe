@@ -6,6 +6,7 @@ import Topbar from '../components/TopBar';
 import Loader from '../components/Loader';
 import icRightArrow from '../assets/ic-right-arrow.png';
 import BackButton from '../components/BackButton';
+import moment from 'moment';
 const MandatePage = () => {
   const { mandateId } = useParams();
   const [mandate, setMandate] = useState(null);
@@ -107,7 +108,15 @@ const MandatePage = () => {
                       onClick={() => navigate(`/mandates/${mandateId}/investor/${investor.investorId._id}`)} 
                       style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
                       key={idx}>
-                      <td style={{ padding: '10px' }}>{idx + 1}. {investor.investorId.name}</td>
+                      <td style={{ padding: '10px' }}>
+                          <strong>{idx + 1}. {investor.investorId.name}</strong><br />
+                          <small style={{
+                              color: moment().diff(moment(investor.updatedAt), 'days') > 7 ? 'red' : '#ABABAB',
+                              fontWeight: moment().diff(moment(investor.updatedAt), 'days') > 7 ? 'bold' : 'normal'
+                          }}>
+                              Last Activity: {moment(investor.updatedAt).format('MMM Do YYYY, h:mm a')}
+                          </small>
+                      </td>
                       <td style={{ padding: '10px', textAlign: 'right' }}>
                       <span className={`status-box status-${formatStatusForCSS(investor.mandateStatus)}`}>
                           {investor.mandateStatus}
