@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
@@ -6,7 +6,6 @@ import TopBar from '../components/TopBar';
 import Loader from '../components/Loader';
 const CreateMandate = () => {
   const navigate = useNavigate();
-
   const userId = localStorage.getItem('userId');
   const [originalInvestors, setOriginalInvestors] = useState([]); 
   const [filteredInvestors, setFilteredInvestors] = useState([]); 
@@ -15,6 +14,32 @@ const CreateMandate = () => {
   const [mandateName, setMandateName] = useState("");
   const [filters, setFilters] = useState({ });
   const [investmentStageFilter, setInvestmentStageFilter] = useState([]);
+  const [sortField, setSortField] = useState(null);
+const [sortDirection, setSortDirection] = useState('asc');
+
+const handleSort = (field) => {
+    if (sortField === field) {
+        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+        setSortField(field);
+        setSortDirection('asc');
+    }
+};
+
+const sortedInvestors = useMemo(() => {
+    if (!sortField) return filteredInvestors;
+
+    return [...filteredInvestors].sort((a, b) => {
+        if (a[sortField] < b[sortField]) {
+            return sortDirection === 'asc' ? -1 : 1;
+        }
+        if (a[sortField] > b[sortField]) {
+            return sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+    });
+}, [filteredInvestors, sortField, sortDirection]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -213,15 +238,15 @@ const CreateMandate = () => {
                 <table style={{ width: '100%' }}>
                 <thead>
                     <tr>
-                        <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>
-                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>Type</th>
-                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>Stage</th>
-                        <th style={{ padding: '10px', textAlign: 'right' }}>Avg. Check</th>
+                        <th style={{ padding: '10px', textAlign: 'left', cursor: 'pointer' }} onClick={() => handleSort('name')}>Name</th>
+                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell', cursor: 'pointer' }} onClick={() => handleSort('type')}>Type</th>
+                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell', cursor: 'pointer' }} onClick={() => handleSort('investmentStage')}>Stage</th>
+                        <th style={{ padding: '10px', textAlign: 'right', cursor: 'pointer' }} onClick={() => handleSort('avgInvestmentAmount')}>Avg. Check</th>
                     </tr>
                 </thead>
                 <tbody>
                   {console.log(filteredInvestors)}
-                    {filteredInvestors.map((filteredInvestor, idx) => (
+                    {sortedInvestors.map((filteredInvestor, idx) => (
                       <tr 
                           onClick={() => navigate(`/investors/${filteredInvestor._id}`)} 
                           style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
