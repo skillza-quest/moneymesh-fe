@@ -1,14 +1,16 @@
-// Auth0Provider.js
-
 import React from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 const Auth0ProviderWithHistory = ({ children }) => {
+  const domain = "dev-hxnqq1jp5xvm1err.us.auth0.com";
+  const clientId = "pwp8X519Jcs33fpWTWzIiofVXQqDlVHT";
+  const redirectUri = process.env.REACT_APP_AUTH0_REDIRECT_URI || window.location.origin;
+
   return (
     <Auth0Provider
-      domain="dev-hxnqq1jp5xvm1err.us.auth0.com"
-      clientId="pwp8X519Jcs33fpWTWzIiofVXQqDlVHT"
-      redirectUri={window.location.origin}
+      domain={domain}
+      clientId={clientId}
+      redirectUri={redirectUri}
     >
       {children}
     </Auth0Provider>

@@ -36,6 +36,18 @@ const MandatePage = () => {
         console.error('Failed to copy: ', err);
     });
   };
+  const deleteMandate = async () => {
+    if (window.confirm("Are you sure you want to delete this mandate? This cannot be undone.")) {
+      try {
+        await axios.delete(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}`);
+        navigate('/mandates'); 
+      } catch (error) {
+        console.error('Error deleting mandate:', error);
+        // Handle error (e.g., show an error message)
+      }
+    }
+  };
+  
 
     useEffect(() => {
       const fetchMandate = async () => {
@@ -130,6 +142,13 @@ const MandatePage = () => {
             ) : (
               <p>No investors.</p>
             )}
+          </div>
+          <div className='my-3'>
+            <button 
+              className='btn btn-danger' 
+              onClick={deleteMandate}>
+              Delete this Mandate
+            </button>
           </div>
         </div>
         <div className='col-12 col-md-3'><br /><br /><br />

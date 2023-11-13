@@ -159,6 +159,7 @@ const CreateMandate = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/mandates/create`, newMandate);
       console.log('New mandate created:', response.data);
+      navigate('/mandates/' + response.data._id );
     } catch (error) {
       console.error('Could not create mandate:', error);
     }
