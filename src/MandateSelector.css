@@ -1,0 +1,54 @@
+
+.popover-menu {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 200px; /* Adjust as needed */
+    font-size: 10pt;
+    padding: 12px;
+  }
+  
+  .popover-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .popover-menu ul li {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f1f1;
+    text-align: left;
+    font-size: 10pt;
+  }
+  
+  .popover-menu ul li:last-child {
+    border-bottom: none;
+  }
+  
+  .popover-menu ul li:hover {
+    background-color: #f5f5f5;
+  }
+  .investor-details-page h3 {
+    display: flex;
+    align-items: center; /* This ensures vertical alignment if the text and button are of different heights */
+    justify-content: space-between; /* This will place the text and button at opposite ends; remove if not desired */
+  }
+  .success-message {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745; /* A moderate green background */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 10pt;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1050; /* Make sure it's above other elements */
+  }

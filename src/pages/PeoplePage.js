@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Topbar from '../components/TopBar';
 import icProfile from '../assets/ic-profile.png'
+import BackButton from '../components/BackButton';
 export const PeoplePage = () => {
     const [investors, setInvestors] = useState([]); 
     const [searchTerm, setSearchTerm] = useState('');
@@ -24,18 +25,23 @@ export const PeoplePage = () => {
             <Topbar />
             <div className='container'>
                 <div className='row mb-3'>
-                    <div className="col-12 col-md-4 col-lg-3">
-                        <p><strong>&nbsp;&nbsp;People</strong></p>
-                        <input 
-                            type="text"
-                            className='form-control' 
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                        />
+                    <div className='col-12 col-md-1'>
+                        <BackButton />
                     </div>
-                </div>
-                <div className='row'>
+                    <div className='col-12 col-md-10'>
+                        <div className='row'>
+                            <div className='row'>
+                                <div className="col-12 col-md-4">
+                                    <p><strong>&nbsp;&nbsp;People</strong></p>
+                                    <input 
+                                        type="text"
+                                        className='form-control' 
+                                        placeholder="Search..."
+                                        value={searchTerm}
+                                        onChange={e => setSearchTerm(e.target.value)}
+                                    /><br /><br />
+                                </div>
+                            </div>
                         {filteredInvestors.map(person => (
                             <div className='col-12 col-md-6 col-lg-4 pb-4'>
                                 <div key={person._id.$oid} className="card-ext mb-3">
@@ -60,8 +66,11 @@ export const PeoplePage = () => {
                                 </div>
                             </div>
                         ))}
+                        </div>
                     </div>
+                    
                 </div>
+            </div>
         </>
     );
 }

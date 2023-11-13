@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import TopBar from '../components/TopBar';
 import icProfile from '../assets/ic-profile.png'
+import BackButton from '../components/BackButton';
+import MandateSelector from '../components/MandateSelector';
 const InvestorDetail = () => {
   const { id } = useParams();
   const [investorDetails, setInvestorDetails] = useState({});
@@ -114,17 +116,18 @@ const InvestorDetail = () => {
       <TopBar />
       <div className="container">
         <div className="row justify-content-center">
+          <div className='col-12 col-md-1'><br />
+            <BackButton />
+          </div>
           <div className="col-12 col-md-8">
-            <Link to="#" onClick={() => window.history.back()}>
-              <small>Go back to Investor Directory</small>
-            </Link>
-            <br />
-            <br />
             <div className="flat-card" style={{minHeight: 500}}>
               <div className="investor-details-page">
                   <div>
                     <div className="investor-details-page">
-                      <h3><strong>{investorDetails.name}</strong></h3>
+                      <h3>
+                        <strong>{investorDetails.name}</strong>
+                        <MandateSelector investorId={id} />
+                      </h3>
                       {investorDetails.website}<br /><br />
                     </div>
                   </div>
