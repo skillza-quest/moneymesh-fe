@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
 import TopBar from '../components/TopBar';
 import Loader from '../components/Loader';
 const CreateMandate = () => {
+  const navigate = useNavigate();
+
   const userId = localStorage.getItem('userId');
   const [originalInvestors, setOriginalInvestors] = useState([]); 
   const [filteredInvestors, setFilteredInvestors] = useState([]); 
@@ -179,7 +181,7 @@ const CreateMandate = () => {
                   <div className='flat-card' style={{position:'relative'}}>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div className='mb-2'>
-                        <big><strong>Create a Mandate</strong></big><br />
+                        <big><strong>Create Mandate</strong></big><br />
                         Use the filters on this page to create a custom list of investors that you can then collaborate on with your startups.<br />
                       </div>
                       <input 
@@ -207,19 +209,39 @@ const CreateMandate = () => {
                 <div className='col-12'>
                 <p><strong>&nbsp;&nbsp;Displaying {filteredInvestors.length} investors below:</strong></p>
                 </div>
-                <ul className='row'>
-                    {filteredInvestors.map(filteredInvestor => (
-                      <li className='col-12 col-md-6 mb-3' key={filteredInvestor._id}>
-                        <div className='card-ext'>
-                          <Link to={`/investors/${filteredInvestor._id}`}>
-                            <big><strong>{filteredInvestor.name}</strong></big><br />
-                              {filteredInvestor.website}<br />
-                              <strong>Avg. Check:</strong> USD {filteredInvestor.avgInvestmentAmount}
-                          </Link>
-                        </div>
-                      </li>
+                <table style={{ width: '100%' }}>
+                <thead>
+                    <tr>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>
+                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>Type</th>
+                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>Stage</th>
+                        <th style={{ padding: '10px', textAlign: 'right' }}>Avg. Check</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {console.log(filteredInvestors)}
+                    {filteredInvestors.map((filteredInvestor, idx) => (
+                      <tr 
+                          onClick={() => navigate(`/investors/${filteredInvestor._id}`)} 
+                          style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
+                          key={filteredInvestor._id}
+                      >
+                          <td style={{ padding: '10px' }}>
+                              <strong>{filteredInvestor.name}</strong>
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>
+                              {filteredInvestor.type}
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>
+                              {filteredInvestor.investmentStage}
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'right' }}>
+                              USD {filteredInvestor.avgInvestmentAmount}
+                          </td>
+                      </tr>
                     ))}
-                </ul>
+                  </tbody>
+                </table>
             </div>
         </div>
     </div>

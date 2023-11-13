@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Topbar from '../components/TopBar';
 import Loader from '../components/Loader';
 import StyledSelect from '../components/StyledSelect';
 import moment from 'moment';
-
+import BackButton from '../components/BackButton';
+import icNote from '../assets/ic-note.png';
+import icFunnel from '../assets/ic-funnel.png';
 const MandateInvestorPage = () => {
   const { mandateId, investorId } = useParams();
   const [investorData, setInvestorData] = useState(null); 
@@ -97,6 +99,9 @@ const MandateInvestorPage = () => {
       <Topbar />
       <div className='container mt-3'>
         <div className='row justify-content-center'>
+          <div className='col-12 col-md-2 text-center'>
+            <BackButton />
+          </div>
           <div className='col-12 col-md-7'>
             <div className="flexContainer">
               <h3><strong>{investorDetails.name}</strong></h3>
@@ -116,16 +121,8 @@ const MandateInvestorPage = () => {
               </div>
             </div>
             <br /><br />
-            <ul className="nav nav-tabs">
-              <li className="nav-item">
-                <button className={`nav-link ${activeTab === 'notesEvents' ? 'active' : ''}`} onClick={() => setActiveTab('notesEvents')}>Notes & Events</button>
-              </li>
-              <li className="nav-item">
-                <button className={`nav-link ${activeTab === 'investorDetails' ? 'active' : ''}`} onClick={() => setActiveTab('investorDetails')}>Investor Details</button>
-              </li>
-            </ul><br />
             <div className="tab-content">
-              <div className={`tab-pane fade ${activeTab === 'notesEvents' ? 'show active' : ''}`}>
+              <div>
                 <section>
                     <p><strong>Add a note</strong></p>
                     <textarea 
@@ -138,16 +135,36 @@ const MandateInvestorPage = () => {
                     <button className='btn btn-primary mt-2' onClick={saveNotes}>Save Note</button><br /><br /><br />
                     <p><strong>Events</strong></p>
                     <ul>
-                    {investorInMandate.events.reverse().map((event, idx) => (
-                        <li key={idx}>
-                        <i>{`${event.notes}`} <br /><small>{moment(event.timestamp).format('MMM Do YYYY, h:mm a')}</small></i><br /><br />
-                        </li>
-                    ))}
+                      {investorInMandate.events.reverse().map((event, idx) => (
+                          <li key={idx} className="d-flex align-items-center my-2">
+                              <div className="media-icon mr-3">
+                                  {event.eventType === 'Notes' && <img src={icNote} alt="Note" width="28px" style={{marginRight: 12}} />}
+                                  {!event.eventType && <img src={icFunnel} alt="Status" width="28px" style={{marginRight: 12}} />}
+                              </div>
+                              <div className="media-content">
+                                  <span>{event.notes}</span> <br />
+                                  <small>{moment(event.timestamp).format('MMM Do YYYY, h:mm a')}</small>
+                              </div>
+                          </li>
+                      ))}
                     </ul>
+
                     </section>
-              </div>
-              <div className={`tab-pane fade ${activeTab === 'investorDetails' ? 'show active' : ''}`}>
+              </div><hr />
+              <div>
                 <section><br />
+                <div className='row'>
+                  <div className='col-12'>
+                  <strong>Industry Focus</strong><br />
+                  {investorDetails.industryFocus && investorDetails.industryFocus.join(', ')}<br /><br />
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-12'>
+                  <strong>Portfolio</strong><br />
+                  {investorDetails.investedCompanies && investorDetails.investedCompanies.join(', ')}<br /><br /><br />
+                  </div>
+                </div>
                 <div className="row">
                 <div className='col-12 col-md-4'>
                   {investorDetails.type && <div><strong>Type:</strong><br /> {investorDetails.type}</div>}
@@ -177,13 +194,14 @@ const MandateInvestorPage = () => {
           </div>
           <div className='col-12 col-md-3'>
             <div className='card-ext'>
+              <strong>People</strong><br /><hr />
               <strong>{investorDetails.primaryContactName}</strong><br />
               {investorDetails.primaryContactPosition}<br />
               {investorDetails.contactEmail}<br />
-              <a href={`mailto:${investorDetails.contactEmail}`}><strong>Send an email</strong></a>
+              <a className='btn btn-secondary mt-2' href={`mailto:${investorDetails.contactEmail}`}><strong>Send an email</strong></a>
             </div>
           </div>
-        </div>
+        </div><br /><br />
       </div>
     </>
   );

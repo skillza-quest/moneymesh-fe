@@ -24,7 +24,20 @@ const InvestorDetail = () => {
     Info: (
       <div><br />
       {investorDetails.description}<br />    
+              <div className='row'>
+                <div className='col-12'>
+                <strong>Industries</strong><br />
+                {investorDetails.industryFocus && investorDetails.industryFocus.join(', ')}<br /><br />
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-12'>
+                <strong>Portfolio</strong><br />
+                {investorDetails.investedCompanies && investorDetails.investedCompanies.join(', ')}<br /><br /><br />
+                </div>
+              </div>
               <div className="row">
+                
                 <div className='col-12 col-md-4'>
                   {investorDetails.type && <div><strong>Type:</strong><br /> {investorDetails.type}</div>}
                 </div>
@@ -43,16 +56,15 @@ const InvestorDetail = () => {
               <br /><br />
               <div className="row">
                 <div className="col-6 col-md-4"><strong>Geographic Focus</strong><br /> {investorDetails.geographicFocus}</div>
-                <div className="col-6 col-md-4"><strong>Industries</strong><br /> {investorDetails.industries && investorDetails.industries.join(', ')}</div>
                 <div className="col-6 col-md-4"><strong>Tags</strong><br /> {investorDetails.tags && investorDetails.tags.join(', ')}</div>
               </div>
               <br />
              
               
               <br />
+              
               <div className="row">
                 <div className="col-12">
-                  <strong>Notes:</strong><br />
                   {investorDetails.notes}
                 </div>
               </div>

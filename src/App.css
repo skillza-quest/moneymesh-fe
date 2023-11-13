@@ -297,3 +297,64 @@ input[type="checkbox"]:checked::after {
 .profile-section img {
   margin-right: 10px;
 }
+
+textarea {
+  padding: 10px;
+}
+
+textarea::placeholder {
+  color: #ABABAB;
+}
+
+.back-button {
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+}
+
+.icon-wrapper {
+  background-color: #DEDEDE;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
+}
+
+.arrow-icon {
+  width: 20px; /* Arrow size */
+  height: 20px;
+  color: #333;
+}
+
+.text {
+  font-size: 12px;
+  color: #333; /* Text color */
+}
+
+.collaborator-link-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.collaborator-link-input {
+  border: 1px solid #ccc;
+  padding: 8px;
+  flex-grow: 1;
+}
+
+.copy-button {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: #0056b3;
+}
+

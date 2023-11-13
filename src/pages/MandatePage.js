@@ -4,11 +4,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Topbar from '../components/TopBar';
 import Loader from '../components/Loader';
-import icRightArrow from '../assets/ic-right-arrow.png'
+import icRightArrow from '../assets/ic-right-arrow.png';
+import BackButton from '../components/BackButton';
 const MandatePage = () => {
   const { mandateId } = useParams();
   const [mandate, setMandate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const statusOrder = ['Rejected', 'New', 'Pending to send Intro Email', 'Responsed to Intro Email', 'Due Diligence Stage', 'Termsheet Stage', 'Investment Committee Call', 'Partner Call', 'Team Call', 'Pending to Respond']; // Adjust this based on your actual statuses
+
   const [inviteTokenInfo, setInviteTokenInfo] = useState(null);  // changed to null
   const [inviteLink, setInviteLink] = useState('');
   const { user } = useAuth0();
@@ -20,9 +24,18 @@ const MandatePage = () => {
     const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/mandates/generate-invite/${mandateId}`);
     const { token } = response.data;
     console.log("THE TOKEN IS ", token);
-    setInviteLink(`http://localhost:3000/accept-invite/${token}`);
+    setInviteLink(`${process.env.REACT_APP_FRONTEND_URL}/accept-invite/${token}`);
     setInviteTokenInfo({ tokenExists: true, tokenExpired: false, token });  // update inviteTokenInfo
   };
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Message disappears after 2 seconds
+    }, (err) => {
+        console.error('Failed to copy: ', err);
+    });
+  };
+
     useEffect(() => {
       const fetchMandate = async () => {
         if (!user) {
@@ -74,6 +87,9 @@ const MandatePage = () => {
       <Topbar />
       <div className='container mt-3'>
         <div className="row justify-content-between">
+        <div className='col-12 col-md-2 text-center'>
+            <BackButton />
+          </div>
         <div className='col-12 col-md-7'>
           
           <h3>{mandate.mandateName}</h3><br />
@@ -82,7 +98,11 @@ const MandatePage = () => {
             {mandate.investors && mandate.investors.length > 0 ? (
               <table style={{ width: '100%' }}>
                 <tbody>
-                  {mandate.investors.map((investor, idx) => (
+                  {mandate.investors
+                  .sort((a, b) => {
+                    return statusOrder.indexOf(b.mandateStatus) - statusOrder.indexOf(a.mandateStatus);
+                  })
+                  .map((investor, idx) => (
                     <tr 
                       onClick={() => navigate(`/mandates/${mandateId}/investor/${investor.investorId._id}`)} 
                       style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
@@ -103,26 +123,37 @@ const MandatePage = () => {
             )}
           </div>
         </div>
-          <div className='col-12 col-md-4'><br /><br /><br />
-            <div className='flat-card'>
-              <p><strong>Collaborators</strong></p>
-              Invite a startup to collaborate with you on this investment mandate.
-              <br /><br />
-              <ul>
-              {mandate.collaborators ? mandate.collaborators.map((collaborator, idx) => (
-                  <li key={idx}>{collaborator.name}</li>
-              )) : 'No collaborators.'}
-              </ul>
-              {(() => {
-                  if (!inviteTokenInfo.tokenExists || inviteTokenInfo.tokenExpired) {
-                      return <button className='btn btn-secondary' onClick={generateInvite}>Generate Link</button>;
-                  } else if (inviteTokenInfo.tokenExists && !inviteTokenInfo.tokenExpired) {
-                      // if token exists, not expired, and not consumed, don't show button, show url
-                      return <p style={{padding:10, backgroundColor:'#EFEFFE'}}>Share this link: <br /><strong>{`${process.env.REACT_APP_FRONTEND_URL}/accept-invite/${inviteTokenInfo.token}`}</strong></p>;
-                  }
-              })()}
+        <div className='col-12 col-md-3'><br /><br /><br />
+          <div className='flat-card'>
+                <p><strong>Collaborators</strong></p>
+                Invite a startup to collaborate with you on this investment mandate.
+                <br /><br />
+                <ul>
+                    {mandate.collaborators ? mandate.collaborators.map((collaborator, idx) => (
+                        <li key={idx}>{collaborator.name}</li>
+                    )) : 'No collaborators.'}
+                </ul>
+                {(() => {
+                    if (!inviteTokenInfo.tokenExists || inviteTokenInfo.tokenExpired) {
+                        return <button className='btn btn-secondary' onClick={generateInvite}>Generate Link</button>;
+                    } else if (inviteTokenInfo.tokenExists && !inviteTokenInfo.tokenExpired) {
+                        return (
+                            <div style={{padding:10, backgroundColor:'#EFEFFE'}}>
+                                <p>Share this link:</p>
+                                <div className="collaborator-link-container">
+                                    <input type="text" value={`${process.env.REACT_APP_FRONTEND_URL}/accept-invite/${inviteTokenInfo.token}`} readOnly className="collaborator-link-input" />
+                                    <button onClick={() => copyToClipboard(`${process.env.REACT_APP_FRONTEND_URL}/accept-invite/${inviteTokenInfo.token}`)} className="copy-button">
+                                        Copy
+                                    </button>
+                                </div>
+                                {copied && <p style={{textAlign: 'right', marginTop: '4px'}}><strong><small>Copied!</small></strong></p>}
+                            </div>
+                        );
+                    }
+                })()}
             </div>
           </div>
+
         </div>
       </div>
     </>
