@@ -131,6 +131,7 @@ const MandateInvestorPage = () => {
                     <textarea 
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
+                      placeholder='How was your interaction? Any follow up material to be sent? What are the next steps?'
                       rows="4"
                       cols="50"
                     /><br />

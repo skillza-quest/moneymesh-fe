@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
 import TopBar from '../components/TopBar'
 import Loader from '../components/Loader';
 const InvestorList = () => {
+  const navigate = useNavigate();
+
   const userId = localStorage.getItem('userId');
   const [originalInvestors, setOriginalInvestors] = useState([]); 
   const [filteredInvestors, setFilteredInvestors] = useState([]); 
@@ -169,19 +171,39 @@ const InvestorList = () => {
                     </div>
                   </div>
                 </div>
-                <ul className='row'>
-                    {filteredInvestors.map(filteredInvestor => (
-                      <li className='col-12 col-md-6 mb-3' key={filteredInvestor._id}>
-                        <div className='card-ext'>
-                          <Link to={`/investors/${filteredInvestor._id}`}>
-                            <big><strong>{filteredInvestor.name}</strong></big><br />
-                              {filteredInvestor.website}<br />
-                              <strong>Avg. Check:</strong> USD {filteredInvestor.avgInvestmentAmount}
-                          </Link>
-                        </div>
-                      </li>
+                <table style={{ width: '100%' }}>
+                <thead>
+                    <tr>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>
+                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>Type</th>
+                        <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>Stage</th>
+                        <th style={{ padding: '10px', textAlign: 'right' }}>Avg. Check</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {console.log(filteredInvestors)}
+                    {filteredInvestors.map((filteredInvestor, idx) => (
+                      <tr 
+                          onClick={() => navigate(`/investors/${filteredInvestor._id}`)} 
+                          style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
+                          key={filteredInvestor._id}
+                      >
+                          <td style={{ padding: '10px' }}>
+                              <strong>{filteredInvestor.name}</strong>
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>
+                              {filteredInvestor.type}
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell' }}>
+                              {filteredInvestor.investmentStage}
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'right' }}>
+                              USD {filteredInvestor.avgInvestmentAmount}
+                          </td>
+                      </tr>
                     ))}
-                </ul>
+                  </tbody>
+                </table>
             </div>
         </div>
     </div>
