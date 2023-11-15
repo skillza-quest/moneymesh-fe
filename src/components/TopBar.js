@@ -11,7 +11,7 @@ const Topbar = () => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light bg-white mb-4">
       <div className="container">
         {/* Logo (left-aligned) */}
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/mandates">
           <img src={logo} width={130} />
         </a>
 
