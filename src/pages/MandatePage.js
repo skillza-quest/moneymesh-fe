@@ -146,11 +146,12 @@ const MandatePage = () => {
           <table style={{width: '100%'}}>
               <tr>
                 <td><strong>Investors in mandate:</strong> {mandate ? mandate.investors.length : 0}</td>
-                <td><strong>Created Date:</strong> {mandate ? moment(mandate.createdAt).format('MMM Do YYYY') : 'N/A'}</td>
+                <td><strong>Total Capital Pool:</strong> {totalInvestment ? `${totalInvestment} USD` : 'N/A'}</td>
+
               </tr>
               <tr>  
+              <td><strong>Created Date:</strong> {mandate ? moment(mandate.createdAt).format('MMM Do YYYY') : 'N/A'}</td>
                 <td><strong>Updated Date:</strong> {mandate ? moment(mandate.updatedAt).format('MMM Do YYYY') : 'N/A'}</td>
-                <td><strong>Total Capital Pool:</strong> {totalInvestment ? `${totalInvestment} USD` : 'N/A'}</td>
               </tr>
             </table><br />
           <div className='flat-card'>

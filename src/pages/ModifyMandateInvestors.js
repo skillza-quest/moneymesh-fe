@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate, useParams} from 'react-router-dom';
 import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
 import TopBar from '../components/TopBar';
 import Loader from '../components/Loader';
 import icDetails from '../assets/ic-details.png';
 import moment from 'moment';
+import { useAuth0 } from '@auth0/auth0-react';
 
-const CreateMandate2 = () => {
+const ModifyMandateInvestors = () => {
   const navigate = useNavigate();
+  const { user } = useAuth0();
   const userId = localStorage.getItem('userId');
   const [originalInvestors, setOriginalInvestors] = useState([]); 
   const [filteredInvestors, setFilteredInvestors] = useState([]); 
@@ -18,10 +20,10 @@ const CreateMandate2 = () => {
   const [filters, setFilters] = useState({ });
   const [investmentStageFilter, setInvestmentStageFilter] = useState([]);
   const [sortField, setSortField] = useState(null);
-const [sortDirection, setSortDirection] = useState('asc');
-const [selectedInvestors, setSelectedInvestors] = useState([]);
-
-const handleSort = (field) => {
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [selectedInvestors, setSelectedInvestors] = useState([]);
+  const { mandateId } = useParams();
+  const handleSort = (field) => {
     if (sortField === field) {
         setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -70,6 +72,41 @@ const handleSelectDeselectAll = (event) => {
       setSelectedInvestors([]);
   }
 };
+const addInvestorsToMandate = async () => {
+  if (selectedInvestors.length === 0) {
+    alert("No investors selected. Please select at least one investor.");
+    return;
+  }
+  console.log("Mandate ID:", mandateId); // Debugging: Check the mandateId value
+
+  // Assuming mandateId is available
+
+  try {
+    // Fetch the existing mandate
+    const mandateResponse = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}?userId=${userId}`);
+    let mandate = mandateResponse.data;
+
+    // Prepare the list of investors to be replaced
+    const selectedInvestorData = filteredInvestors.filter(investor => selectedInvestors.includes(investor._id)).map(investor => ({
+      investorId: investor._id,
+      mandateStatus: 'new',  
+      events: [], 
+      notes: ''  
+    }));
+
+    // Replace the investors list of the mandate
+    mandate.investors = selectedInvestorData;
+
+    // Send an update request
+    const updateResponse = await axios.put(`${process.env.REACT_APP_SERVER_URL}/mandates/update/${mandateId}`, mandate);
+    console.log('Mandate updated:', updateResponse.data);
+    navigate('/mandates/' + updateResponse.data._id);
+  } catch (error) {
+    console.error('Could not update mandate:', error);
+  }
+};
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -195,38 +232,14 @@ const handleSelectDeselectAll = (event) => {
       return true;
     });
   };
-  const createMandate = async () => {
-    const selectedInvestorData = filteredInvestors.filter(investor => selectedInvestors.includes(investor._id)).map((investor) => {
-        return {
-            investorId: investor._id,
-            mandateStatus: 'new',  
-            events: [], 
-            notes: ''  
-        };
-    });
-
-    if (selectedInvestorData.length === 0) {
-        alert("No investors selected. Please select at least one investor.");
-        return;
+  const getButtonText = () => {
+    const numberOfInvestors = selectedInvestors.length;
+    if (numberOfInvestors === 0) {
+      return "Pick at least 1 investor to proceed";
+    } else {
+      return `Add ${numberOfInvestors} investor${numberOfInvestors > 1 ? 's' : ''} to mandate`;
     }
-    const currentDate = moment().format('MMM YY');
-    
-    let mandateFullName = mandateName + ' (' + currentDate + ')';
-    const newMandate = {
-        mandateName: mandateFullName,
-        creatorId: userId,
-        investors: selectedInvestorData 
-    };
-    
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/mandates/create`, newMandate);
-        console.log('New mandate created:', response.data);
-        navigate('/mandates/' + response.data._id);
-    } catch (error) {
-        console.error('Could not create mandate:', error);
-    }
-};
-
+  };
   
   if (loading) return <Loader />;
   return (
@@ -234,28 +247,22 @@ const handleSelectDeselectAll = (event) => {
     <TopBar />
     <div className="container">
         <div className="row justify-content-center">
-        <div className='col-12 col-md-12 mb-2'>
-                  <div className='flat-card' style={{position:'relative'}}>
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div className='mb-2'>
-                        <big><strong>Create Mandate</strong></big><br />
-                        Use the filters on this page to create a custom list of investors that you can then collaborate on with your startups.<br />
-                      </div>
-                      <input 
-                        type="text" 
-                        className='form-control mb-2'
-                        style={{ flex: 1, maxWidth: 300 }}  // Takes up available space
-                        placeholder="Give this mandate a name" 
-                        value={mandateName} 
-                        onChange={(e) => setMandateName(e.target.value)}  // Set mandateName
-                      />
-                    <button className='btn btn-primary' style={{width: 300}} onClick={createMandate}>
-                        Create mandate with {selectedInvestors.length} selected investors
-                    </button>                    
-                    </div>
-                    <div className="illustration d-none d-md-block"></div>
-                  </div>
+          <div className='col-12 col-md-8 mb-2'>
+            <div>
+              <h3>Pick investors for this mandate</h3><br />
+            </div>
           </div>
+          <div className='col-12 col-md-4 mb-2 text-end'>
+          <button 
+            className='btn btn-primary'
+            disabled={selectedInvestors.length === 0}
+            onClick={addInvestorsToMandate}
+          >
+            {getButtonText()}
+          </button>
+          </div>
+        </div>
+        <div className='row justify-content-center'>
             <div className="col-12 col-md-3">
                 <div className="sidebar">
                     <FiltersSidebar setFilters={setFilters} />
@@ -330,4 +337,4 @@ const handleSelectDeselectAll = (event) => {
   );
 };
 
-export default CreateMandate2;
+export default ModifyMandateInvestors;
