@@ -14,11 +14,47 @@ const MandatePage = () => {
   const [copied, setCopied] = useState(false);
   const statusOrder = ['Rejected', 'New', 'Pending to send Intro Email', 'Responsed to Intro Email', 'Due Diligence Stage', 'Termsheet Stage', 'Investment Committee Call', 'Partner Call', 'Team Call', 'Pending to Respond']; // Adjust this based on your actual statuses
   const totalInvestment = mandate && mandate.investors.reduce((sum, investor) => sum + investor.avgInvestmentAmount, 0);
-
   const [inviteTokenInfo, setInviteTokenInfo] = useState(null);  // changed to null
   const [inviteLink, setInviteLink] = useState('');
   const { user } = useAuth0();
+  const statusBuckets = {
+    'Under discussion': [
+      'Due Diligence Stage',
+      'Termsheet Stage',
+      'Investment Committee Call',
+      'Partner Call',
+      'Team Call',
+      'Responsed to Intro Email'
+    ],
+    'Investors Yet to Revert': [
+      'Pending to Respond',
+      'Pending to send Intro Email',
+      'New'
+    ],
+    'Rejected': ['Rejected']
+  };
   const navigate = useNavigate();
+  const getStatusBuckets = (investors) => {
+    const buckets = {
+        'Under discussion': 0,
+        'Investors Yet to Revert': 0,
+        'Rejected': 0
+    };
+
+    investors.forEach(investor => {
+        if (statusBuckets['Under discussion'].includes(investor.mandateStatus)) {
+            buckets['Under discussion']++;
+        } else if (statusBuckets['Investors Yet to Revert'].includes(investor.mandateStatus)) {
+            buckets['Investors Yet to Revert']++;
+        } else if (statusBuckets['Rejected'].includes(investor.mandateStatus)) {
+            buckets['Rejected']++;
+        }
+    });
+
+    return buckets;
+};
+  const statusBucketCounts = mandate ? getStatusBuckets(mandate.investors) : null;
+
   const formatStatusForCSS = (status) => {
     return status.toLowerCase().replace(/\s+/g, '-');
   };
@@ -109,16 +145,25 @@ const MandatePage = () => {
           <h3>{mandate.mandateName}</h3><br />
           <table style={{width: '100%'}}>
               <tr>
-                <td><strong>Number of Investors:</strong> {mandate ? mandate.investors.length : 0}</td>
+                <td><strong>Investors in mandate:</strong> {mandate ? mandate.investors.length : 0}</td>
                 <td><strong>Created Date:</strong> {mandate ? moment(mandate.createdAt).format('MMM Do YYYY') : 'N/A'}</td>
               </tr>
               <tr>  
                 <td><strong>Updated Date:</strong> {mandate ? moment(mandate.updatedAt).format('MMM Do YYYY') : 'N/A'}</td>
-                <td><strong>Total Check Size:</strong> {totalInvestment ? `${totalInvestment} USD` : 'N/A'}</td>
+                <td><strong>Total Capital Pool:</strong> {totalInvestment ? `${totalInvestment} USD` : 'N/A'}</td>
               </tr>
             </table><br />
           <div className='flat-card'>
-            <p><strong>Investors</strong></p><br />
+            <p><strong>Investors</strong></p>
+            <table style={{width: '100%'}}>
+              <tbody>
+              <tr>
+                <td>Under discussion: <span className='status-box status-team-call'>{statusBucketCounts ? statusBucketCounts['Under discussion'] : 0}</span></td>
+                <td>Investors Yet to Revert: <span className='status-box status-new'>{statusBucketCounts ? statusBucketCounts['Investors Yet to Revert'] : 0}</span></td>
+                <td style={{textAlign: 'right'}}>Rejected: <span className='status-box status-cold'>{statusBucketCounts ? statusBucketCounts['Rejected'] : 0}</span></td>
+              </tr>
+              </tbody>
+            </table><br />
             {mandate.investors && mandate.investors.length > 0 ? (
               <table style={{ width: '100%' }}>
                 <tbody>

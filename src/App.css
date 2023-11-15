@@ -156,17 +156,17 @@ a {
   letter-spacing: 0.5px;
 }
 
-.status-new {
+.status-new, .status-pending-to-send-intro-mail, .status-pending-to-respond {
   background-color: #DFEAFF;
   color: #7F56D9;
 }
 
 .status-cold {
-  background-color: #D1FADF;
+  background-color: #f9dbd9;
   color: #EF4439;
 }
 
-.status-due-diligence-stage {
+.status-due-diligence-stage, .status-termsheet-stage, .status-investment-committee-call, .status-partner-call, .status-team-call, .status-responsed-to-intro-email {
   background-color: #D1FADF;
   color: #0CB466;
 }
