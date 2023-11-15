@@ -32,7 +32,13 @@ export const PeoplePage = () => {
                         <div className='row'>
                             <div className='row'>
                                 <div className="col-12 col-md-4">
-                                    <p><strong>&nbsp;&nbsp;People</strong></p>
+                                <div className='row'>
+                                    <div className='col-12'>
+                                        <div className='mb-2'>
+                                                    <h3>People</h3><br />
+                                        </div>
+                                    </div>
+                                </div>
                                     <input 
                                         type="text"
                                         className='form-control' 

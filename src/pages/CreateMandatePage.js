@@ -57,7 +57,7 @@ const onSubmit = async e => {
                   <div className='flat-card' style={{position:'relative'}}>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div className='mb-2'>
-                        <big><strong>Create Mandate</strong></big><br />
+                        <h3>Create Mandate</h3><br />
                         Start by giving basic information about the mandate. In the next step, you will be able to add investors to this mandate.<br /><br />
                       </div>
                       <form onSubmit={e => onSubmit(e)}>

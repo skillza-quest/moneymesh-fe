@@ -36,7 +36,13 @@ const UserMandates = () => {
     <>
     <TopBar />
     <div className='container mt-3'>
-    <p><strong>&nbsp;&nbsp;Your Mandates</strong></p>
+    <div className='row'>
+        <div className='col-12'>
+            <div className='mb-2'>
+                        <h3>Your Mandates</h3><br />
+            </div>
+          </div>
+      </div>
       <ul className='row'>
       {userRole !== 'Startup' && (
 

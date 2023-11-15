@@ -175,14 +175,21 @@ const InvestorList = () => {
   return (
     <>
     <TopBar />
-    <div className="container-fluid">
+    <div className="container">
+      <div className='row'>
+        <div className='col-12'>
+            <div className='mb-2'>
+                        <h3>Browse Investors</h3><br />
+            </div>
+          </div>
+      </div>
         <div className="row justify-content-center">
             <div className="col-12 col-md-4 col-lg-4 col-xl-3">
                 <div className="sidebar">
                     <FiltersSidebar setFilters={setFilters} />
                 </div>
             </div>
-            <div className="col-12 col-md-8 col-lg-8 col-xl-8">
+            <div className="col-12 col-md-8 col-lg-8 col-xl-9">
                 <div className='row justify-content-center'>
                   <div className='col-12'>
                     <div className="search-container">
