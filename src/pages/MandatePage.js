@@ -13,6 +13,7 @@ const MandatePage = () => {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const statusOrder = ['Rejected', 'New', 'Pending to send Intro Email', 'Responsed to Intro Email', 'Due Diligence Stage', 'Termsheet Stage', 'Investment Committee Call', 'Partner Call', 'Team Call', 'Pending to Respond']; // Adjust this based on your actual statuses
+  const totalInvestment = mandate && mandate.investors.reduce((sum, investor) => sum + investor.avgInvestmentAmount, 0);
 
   const [inviteTokenInfo, setInviteTokenInfo] = useState(null);  // changed to null
   const [inviteLink, setInviteLink] = useState('');
@@ -106,6 +107,16 @@ const MandatePage = () => {
         <div className='col-12 col-md-7'>
           
           <h3>{mandate.mandateName}</h3><br />
+          <table style={{width: '100%'}}>
+              <tr>
+                <td><strong>Number of Investors:</strong> {mandate ? mandate.investors.length : 0}</td>
+                <td><strong>Created Date:</strong> {mandate ? moment(mandate.createdAt).format('MMM Do YYYY') : 'N/A'}</td>
+              </tr>
+              <tr>  
+                <td><strong>Updated Date:</strong> {mandate ? moment(mandate.updatedAt).format('MMM Do YYYY') : 'N/A'}</td>
+                <td><strong>Total Check Size:</strong> {totalInvestment ? `${totalInvestment} USD` : 'N/A'}</td>
+              </tr>
+            </table><br />
           <div className='flat-card'>
             <p><strong>Investors</strong></p><br />
             {mandate.investors && mandate.investors.length > 0 ? (

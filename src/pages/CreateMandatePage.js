@@ -4,6 +4,9 @@ import axios from 'axios';
 import FiltersSidebar from '../components/FiltersSidebar';
 import TopBar from '../components/TopBar';
 import Loader from '../components/Loader';
+import icDetails from '../assets/ic-details.png';
+import moment from 'moment';
+
 const CreateMandate = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
@@ -16,6 +19,7 @@ const CreateMandate = () => {
   const [investmentStageFilter, setInvestmentStageFilter] = useState([]);
   const [sortField, setSortField] = useState(null);
 const [sortDirection, setSortDirection] = useState('asc');
+const [selectedInvestors, setSelectedInvestors] = useState([]);
 
 const handleSort = (field) => {
     if (sortField === field) {
@@ -25,6 +29,26 @@ const handleSort = (field) => {
         setSortDirection('asc');
     }
 };
+function formatAmount(amount) {
+  if (amount >= 1000000) {
+      const inMillions = amount / 1000000;
+      return (inMillions % 1 === 0 ? inMillions.toFixed(0) : inMillions.toFixed(1)) + 'M';
+  } else if (amount >= 1000) {
+      const inThousands = amount / 1000;
+      return (inThousands % 1 === 0 ? inThousands.toFixed(0) : inThousands.toFixed(1)) + 'k';
+  } else {
+      return amount.toString();
+  }
+}
+const handleInvestorSelection = (event, investorId) => {
+  event.stopPropagation();
+  if (event.target.checked) {
+      setSelectedInvestors([...selectedInvestors, investorId]);
+  } else {
+      setSelectedInvestors(selectedInvestors.filter(id => id !== investorId));
+  }
+};
+
 
 const sortedInvestors = useMemo(() => {
     if (!sortField) return filteredInvestors;
@@ -39,7 +63,13 @@ const sortedInvestors = useMemo(() => {
         return 0;
     });
 }, [filteredInvestors, sortField, sortDirection]);
-
+const handleSelectDeselectAll = (event) => {
+  if (event.target.checked) {
+      setSelectedInvestors(filteredInvestors.map(investor => investor._id));
+  } else {
+      setSelectedInvestors([]);
+  }
+};
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -166,44 +196,45 @@ const sortedInvestors = useMemo(() => {
     });
   };
   const createMandate = async () => {
-    const investorData = filteredInvestors.map((investor) => {
-      return {
-        investorId: investor._id,
-        mandateStatus: 'new',  
-        events: [], 
-        notes: ''  
-      };
+    const selectedInvestorData = filteredInvestors.filter(investor => selectedInvestors.includes(investor._id)).map((investor) => {
+        return {
+            investorId: investor._id,
+            mandateStatus: 'new',  
+            events: [], 
+            notes: ''  
+        };
     });
+
+    if (selectedInvestorData.length === 0) {
+        alert("No investors selected. Please select at least one investor.");
+        return;
+    }
+    const currentDate = moment().format('MMM YY');
     
+    let mandateFullName = mandateName + ' (' + currentDate + ')';
     const newMandate = {
-      mandateName: mandateName,
-      creatorId: userId,
-      investors: investorData 
+        mandateName: mandateFullName,
+        creatorId: userId,
+        investors: selectedInvestorData 
     };
     
     try {
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/mandates/create`, newMandate);
-      console.log('New mandate created:', response.data);
-      navigate('/mandates/' + response.data._id );
+        const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/mandates/create`, newMandate);
+        console.log('New mandate created:', response.data);
+        navigate('/mandates/' + response.data._id);
     } catch (error) {
-      console.error('Could not create mandate:', error);
+        console.error('Could not create mandate:', error);
     }
-  };
+};
+
   
   if (loading) return <Loader />;
   return (
     <>
     <TopBar />
-    <div className="container-fluid">
+    <div className="container">
         <div className="row justify-content-center">
-            <div className="col-12 col-md-4 col-lg-4 col-xl-3">
-                <div className="sidebar">
-                    <FiltersSidebar setFilters={setFilters} />
-                </div>
-            </div>
-            <div className="col-12 col-md-8 col-lg-8 col-xl-8">
-                <div className='row justify-content-center'>
-                <div className='col-12 col-md-12 mb-2'>
+        <div className='col-12 col-md-12 mb-2'>
                   <div className='flat-card' style={{position:'relative'}}>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div className='mb-2'>
@@ -218,11 +249,20 @@ const sortedInvestors = useMemo(() => {
                         value={mandateName} 
                         onChange={(e) => setMandateName(e.target.value)}  // Set mandateName
                       />
-                    <button className='btn btn-primary' style={{width: 300}} onClick={createMandate}>Create mandate with {filteredInvestors.length} Investors</button>
+                    <button className='btn btn-primary' style={{width: 300}} onClick={createMandate}>
+                        Create mandate with {selectedInvestors.length} selected investors
+                    </button>                    
                     </div>
                     <div className="illustration d-none d-md-block"></div>
                   </div>
+          </div>
+            <div className="col-12 col-md-3">
+                <div className="sidebar">
+                    <FiltersSidebar setFilters={setFilters} />
                 </div>
+            </div>
+            <div className="col-12 col-md-9">
+                <div className='row justify-content-center'>
                   <div className='col-12 d-none'>
                     <div className="search-container">
                       <div className="search-icon">
@@ -238,20 +278,32 @@ const sortedInvestors = useMemo(() => {
                 <table style={{ width: '100%' }}>
                 <thead>
                     <tr>
+                    <th style={{ padding: '10px', textAlign: 'left', cursor: 'pointer' }}><input
+                        type="checkbox"
+                        checked={selectedInvestors.length === filteredInvestors.length}
+                        onChange={handleSelectDeselectAll}
+                    /></th>
                         <th style={{ padding: '10px', textAlign: 'left', cursor: 'pointer' }} onClick={() => handleSort('name')}>Name</th>
                         <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell', cursor: 'pointer' }} onClick={() => handleSort('type')}>Type</th>
                         <th style={{ padding: '10px', textAlign: 'right', display: 'none', display: 'lg-table-cell', cursor: 'pointer' }} onClick={() => handleSort('investmentStage')}>Stage</th>
                         <th style={{ padding: '10px', textAlign: 'right', cursor: 'pointer' }} onClick={() => handleSort('avgInvestmentAmount')}>Avg. Check</th>
+                        <th style={{ padding: '10px', textAlign: 'right', cursor: 'pointer' }}>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                   {console.log(filteredInvestors)}
                     {sortedInvestors.map((filteredInvestor, idx) => (
                       <tr 
-                          onClick={() => navigate(`/investors/${filteredInvestor._id}`)} 
                           style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
                           key={filteredInvestor._id}
                       >
+                        <td  style={{ padding: '10px' }}>
+                            <input
+                                type="checkbox"
+                                checked={selectedInvestors.includes(filteredInvestor._id)}
+                                onChange={(e) => handleInvestorSelection(e, filteredInvestor._id)}
+                            />
+                        </td>
                           <td style={{ padding: '10px' }}>
                               <strong>{filteredInvestor.name}</strong>
                           </td>
@@ -262,7 +314,10 @@ const sortedInvestors = useMemo(() => {
                               {filteredInvestor.investmentStage}
                           </td>
                           <td style={{ padding: '10px', textAlign: 'right' }}>
-                              USD {filteredInvestor.avgInvestmentAmount}
+                              USD {formatAmount(filteredInvestor.avgInvestmentAmount)}
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'right' }}>
+                              <a href={`/investors/${filteredInvestor._id}`} target='_blank'><img src={icDetails} width="20px" /></a>
                           </td>
                       </tr>
                     ))}

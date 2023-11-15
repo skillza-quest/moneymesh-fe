@@ -21,6 +21,17 @@ const FiltersSidebar = ({ setFilters }) => {
         left: 20,
         width: '80%',
     };
+    function formatAmount(amount) {
+      if (amount >= 1000000) {
+          const inMillions = amount / 1000000;
+          return (inMillions % 1 === 0 ? inMillions.toFixed(0) : inMillions.toFixed(1)) + 'M';
+      } else if (amount >= 1000) {
+          const inThousands = amount / 1000;
+          return (inThousands % 1 === 0 ? inThousands.toFixed(0) : inThousands.toFixed(1)) + 'k';
+      } else {
+          return amount.toString();
+      }
+    }
     const onUpdate = (updateValues) => {
         setValues(updateValues);
     }
@@ -288,7 +299,7 @@ const FiltersSidebar = ({ setFilters }) => {
                         fontSize: '10px',
                         padding: '2px'
                       }}>
-                        {handle.value}
+                        {formatAmount(handle.value)}
                       </div>
                     </div>
                   ))}

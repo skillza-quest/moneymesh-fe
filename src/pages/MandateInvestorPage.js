@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Topbar from '../components/TopBar';
 import Loader from '../components/Loader';
@@ -9,6 +9,7 @@ import BackButton from '../components/BackButton';
 import icNote from '../assets/ic-note.png';
 import icFunnel from '../assets/ic-funnel.png';
 const MandateInvestorPage = () => {
+  const navigate = useNavigate();
   const { mandateId, investorId } = useParams();
   const [investorData, setInvestorData] = useState(null); 
   const [notes, setNotes] = useState("");
@@ -19,7 +20,8 @@ const MandateInvestorPage = () => {
     const fetchInvestorDetails = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investor/${investorId}`);
-        setInvestorData(response.data); // Updated this line
+        setInvestorData(response.data);
+        console.log("Investor removed");
       } catch (error) {
         console.error('Could not fetch investor details:', error);
       } finally {
@@ -29,7 +31,18 @@ const MandateInvestorPage = () => {
 
     fetchInvestorDetails();
   }, [mandateId, investorId]);
-
+  const removeInvestor = async () => {
+    if (window.confirm("Are you sure you want to remove this investor and their info from this mandate? This cannot be undone.")) {
+      try {
+        await axios.delete(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investor/${investorId}`);
+        navigate('/mandates/' + mandateId); 
+        console.log("Investor removed");
+      } catch (error) {
+        console.error('Error removing investor:', error);
+        // Handle error (e.g., show an error message)
+      }
+    }
+  };
   const saveNotes = async () => {
     try {
       const response = await axios.patch(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investors/${investorId}/notes`, { notes });
@@ -189,6 +202,15 @@ const MandateInvestorPage = () => {
               </div>
               <br />
                   </section>
+                  <br />
+                  <hr />
+                  <div className='my-3'>
+                    <button 
+                      className='btn btn-danger' 
+                      onClick={removeInvestor}>
+                      Remove investor from Mandate
+                    </button>
+                  </div>
               </div>
             </div>
           </div>
