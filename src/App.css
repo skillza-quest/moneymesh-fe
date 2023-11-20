@@ -166,7 +166,7 @@ a {
   color: #EF4439;
 }
 
-.status-due-diligence-stage, .status-termsheet-stage, .status-investment-committee-call, .status-partner-call, .status-team-call, .status-responsed-to-intro-email {
+.status-due-diligence-stage, .status-call-for-money, .status-capital-transferred, .status-termsheet-stage, .status-investment-committee-call, .status-partner-call, .status-team-call, .status-responsed-to-intro-email {
   background-color: #D1FADF;
   color: #0CB466;
 }

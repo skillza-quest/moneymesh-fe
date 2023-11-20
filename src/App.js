@@ -41,7 +41,7 @@ const RoleBasedRedirect = () => {
       } else if (roles?.includes('Investor')) {
         setUserRole('Investor');
         localStorage.setItem('userRole', 'Investor');
-        navigate('/mandates/create');
+        navigate('/mandates');
       } else if (roles?.includes('Startup')) {
         setUserRole('Startup');
         localStorage.setItem('userRole', 'Startup');

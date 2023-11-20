@@ -13,14 +13,18 @@ const MandateInvestorPage = () => {
   const { mandateId, investorId } = useParams();
   const [investorData, setInvestorData] = useState(null); 
   const [notes, setNotes] = useState("");
+  const [committedAmount, setCommittedAmount] = useState();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('notesEvents');
+  const [updateTimeout, setUpdateTimeout] = useState(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const fetchInvestorDetails = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investor/${investorId}`);
         setInvestorData(response.data);
+        setCommittedAmount(response.data.investorInMandate.committedAmount);
         console.log("Investor removed");
       } catch (error) {
         console.error('Could not fetch investor details:', error);
@@ -31,6 +35,50 @@ const MandateInvestorPage = () => {
 
     fetchInvestorDetails();
   }, [mandateId, investorId]);
+
+  const handleCommittedAmountChange = (e) => {
+    setIsSaved(false);
+    let newAmount = e.target.value;
+  
+    // Remove commas from the input
+    newAmount = newAmount.replace(/,/g, '');
+  
+    // Convert the input to a number for validation
+    const numericAmount = Number(newAmount);
+  
+    // Check if the input is a valid number within the specified range
+    if (isNaN(numericAmount) || numericAmount < 1 || numericAmount > 10000000) {
+      // Invalid input: Do not proceed with the update
+      return;
+    }
+  
+    setCommittedAmount(newAmount);
+  
+    // Clear existing timeout
+    if (updateTimeout) {
+      clearTimeout(updateTimeout);
+    }
+  
+    // Set new timeout to update the database after 2 seconds
+    const newTimeout = setTimeout(() => {
+      updateCommittedAmount(numericAmount); // Pass the numeric amount for updating
+    }, 1000);
+  
+    setUpdateTimeout(newTimeout);
+  };
+  
+
+const updateCommittedAmount = async (amount) => {
+  try {
+    // Replace with your API call to update the committed amount
+    await axios.patch(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}/investors/${investorId}/committedAmount`, { committedAmount: amount });
+    console.log('Committed amount updated');
+    setIsSaved(true);
+  } catch (error) {
+    console.error('Could not update committed amount:', error);
+  }
+};
+
   const removeInvestor = async () => {
     if (window.confirm("Are you sure you want to remove this investor and their info from this mandate? This cannot be undone.")) {
       try {
@@ -129,6 +177,8 @@ const MandateInvestorPage = () => {
                   <option value="Responsed to Intro Email">Responsed to Intro Email</option>
                   <option value="Pending to Respond">Pending to Respond</option>
                   <option value="Pending to send Intro Email">Pending to send Intro Email</option>
+                  <option value="Call for Money">Call for Money</option>
+                  <option value="Capital Transferred">Capital Transferred</option>
                   <option value="Rejected">Rejected</option>
                 </StyledSelect>
               </div>
@@ -137,6 +187,36 @@ const MandateInvestorPage = () => {
             <div className="tab-content">
               <div>
                 <section>
+                <div>
+  <label><strong>Committed Amount (USD)</strong></label><br />
+  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+    <input
+      type="number"
+      className='form-control'
+      name="committedAmount"
+      style={{ width: 200 }}
+      value={committedAmount}
+      onChange={handleCommittedAmountChange}
+      maxLength="50"
+      required
+    />
+    {isSaved && (
+      <span 
+        className="text-success" 
+        style={{ 
+          fontWeight: 'bold', 
+          backgroundColor: '#D1FADF', 
+          color: '#0CB466', 
+          borderRadius: '4px',
+          padding: '2px 4px',
+          fontSize: 'small'
+        }}>
+        Saved
+      </span>
+    )}
+  </div>
+</div>
+<br />
                     <p><strong>Add a note</strong></p>
                     <textarea 
                       value={notes}
@@ -164,6 +244,7 @@ const MandateInvestorPage = () => {
 
                     </section>
               </div><hr />
+              
               <div>
                 <section><br />
                 <div className='row'>
