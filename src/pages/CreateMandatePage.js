@@ -30,7 +30,7 @@ const onSubmit = async e => {
   e.preventDefault();
     const { companyName, roundSize, roundType } = formData;
     const currentDate = moment().format('MMM YY');
-    let mandateFullName = companyName + ' - ' + formatAmount(roundSize) + ' (' + currentDate + ')';
+    let mandateFullName = companyName + ' - $' + formatAmount(roundSize) + ' (' + currentDate + ')';
     const newMandate = {
         mandateName: mandateFullName,
         companyName: companyName,

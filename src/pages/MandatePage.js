@@ -230,11 +230,11 @@ const MandatePage = () => {
                 <tbody>
                   {sortedInvestors.map((investor, idx) => (
                     <tr 
-                      onClick={() => navigate(`/mandates/${mandateId}/investor/${investor.investorId._id}`)} 
-                      style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
+                    onClick={() => navigate(`/mandates/${mandateId}/investor/${investor.investorId?._id}`)} 
+                    style={{ cursor: 'pointer', backgroundColor: idx % 2 === 0 ? '#fafafa' : 'transparent' }} 
                       key={idx}>
                       <td style={{ padding: '10px' }}>
-                          <strong>{idx + 1}. {investor.investorId.name}</strong><br />
+                        <strong>{idx + 1}. {investor.investorId?.name}</strong><br />
                       </td>
                       <td style={{ padding: '10px' }}>
                           <small style={{

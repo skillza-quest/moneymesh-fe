@@ -74,39 +74,42 @@ const handleSelectDeselectAll = (event) => {
       setSelectedInvestors([]);
   }
 };
+
 const addInvestorsToMandate = async () => {
   if (selectedInvestors.length === 0) {
     alert("No investors selected. Please select at least one investor.");
     return;
   }
-  console.log("Mandate ID:", mandateId); // Debugging: Check the mandateId value
-
-  // Assuming mandateId is available
 
   try {
-    // Fetch the existing mandate
     const mandateResponse = await axios.get(`${process.env.REACT_APP_SERVER_URL}/mandates/${mandateId}?userId=${userId}`);
     let mandate = mandateResponse.data;
 
-    // Prepare the list of investors to be replaced
-    const selectedInvestorData = filteredInvestors.filter(investor => selectedInvestors.includes(investor._id)).map(investor => ({
-      investorId: investor._id,
-      mandateStatus: 'new',  
-      events: [], 
-      notes: ''  
-    }));
+    // Extract current investor IDs
+    let currentInvestorIds = mandate.investors.map(investor => investor.investorId);
 
-    // Replace the investors list of the mandate
-    mandate.investors = selectedInvestorData;
+    // Identify new investors to be added (those not already in the mandate)
+    const newInvestorsToAdd = filteredInvestors
+      .filter(investor => selectedInvestors.includes(investor._id) && !currentInvestorIds.includes(investor._id))
+      .map(investor => ({
+        investorId: investor._id, // Use the string ID directly
+        mandateStatus: 'new',
+        events: [],
+        notes: '',
+        committedAmount: 0 // Default values for new investors
+      }));
 
-    // Send an update request
+    // Add only new investors to the existing ones
+    mandate.investors = [...mandate.investors.filter(investor => currentInvestorIds.includes(investor.investorId)), ...newInvestorsToAdd];
+
     const updateResponse = await axios.put(`${process.env.REACT_APP_SERVER_URL}/mandates/update/${mandateId}`, mandate);
-    console.log('Mandate updated:', updateResponse.data);
     navigate('/mandates/' + updateResponse.data._id);
   } catch (error) {
     console.error('Could not update mandate:', error);
   }
 };
+
+
 
 
 useEffect(() => {
@@ -306,7 +309,7 @@ useEffect(() => {
                         />
                       </span> 
                       <span style={{ verticalAlign: 'middle' }}>
-                        &nbsp;&nbsp;&nbsp;Select All Investors Below
+                        &nbsp;Select All Investors Below
                       </span>
                     <table style={{ width: '100%' }}>
                     <thead>
