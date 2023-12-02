@@ -7,13 +7,13 @@ import BackButton from '../components/BackButton';
 import MandateSelector from '../components/MandateSelector';
 const LPDetail = () => {
   const { id } = useParams();
-  const [investorDetails, setInvestorDetails] = useState({});
+  const [limitedPartnerDetails, setLimitedPartnerDetails] = useState({});
   const [activeTab, setActiveTab] = useState('Info'); // Initialize the active tab as 'Info'
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/investors/${id}`)
-      .then((response) => setInvestorDetails(response.data))
+      .get(`${process.env.REACT_APP_SERVER_URL}/limited-partners/${id}`)
+      .then((response) => {setLimitedPartnerDetails(response.data); console.log("LP Details:", response.data)})
       .catch((error) => console.error(error));
   }, [id]);
 
@@ -25,40 +25,44 @@ const LPDetail = () => {
   const tabContent = {
     Info: (
       <div><br />
-      {investorDetails.description}<br />    
+      {limitedPartnerDetails.description}<br />    
               <div className='row'>
                 <div className='col-12'>
                 <strong>Industries</strong><br />
-                {investorDetails.industryFocus && investorDetails.industryFocus.join(', ')}<br /><br />
+                {limitedPartnerDetails.industryFocus && limitedPartnerDetails.industryFocus.join(', ')}<br /><br />
                 </div>
               </div>
               <div className='row'>
                 <div className='col-12'>
                 <strong>Portfolio</strong><br />
-                {investorDetails.investedCompanies && investorDetails.investedCompanies.join(', ')}<br /><br /><br />
+                {limitedPartnerDetails.investdFunds && limitedPartnerDetails.investedFunds.join(', ')}<br /><br /><br />
                 </div>
               </div>
               <div className="row">
                 
                 <div className='col-12 col-md-4'>
-                  {investorDetails.type && <div><strong>Type:</strong><br /> {investorDetails.type}</div>}
+                  {limitedPartnerDetails.type && <div><strong>Type:</strong><br /> {limitedPartnerDetails.type}</div>}
                 </div>
                 <div className="col-12 col-md-4">
-                  <strong>Investment Stages:</strong><br />{investorDetails.investmentStage}<br /><br />
+                  <strong>Investment Stages:</strong><br />{limitedPartnerDetails.investmentStage}<br /><br />
                 </div>
                 <div className="col-12 col-md-4">
-                  <strong>Time To Decision: </strong><br />{investorDetails.timeToDecision} <br /><br />
+                  <strong>AUM: </strong><br />{limitedPartnerDetails.aum} <br /><br />
                 </div>
               </div><br />
               <div className="row">
-                <div className="col-6 col-md-4"><strong>Avg. Check:</strong><br /> USD {investorDetails.averageInvestmentAmount}</div>
-                <div className="col-6 col-md-4"><strong>Fund Size:</strong><br /> {investorDetails.fundSize && <div>{investorDetails.fundSize}</div>}</div>
-                <div className="col-6 col-md-4"><strong>Investments Made:</strong><br />  {investorDetails.totalInvestmentsMade && <div>{investorDetails.totalInvestmentsMade}</div>}</div>
+                <div className="col-6 col-md-4"><strong>Avg. Check:</strong><br /> USD {limitedPartnerDetails.averageInvestmentAmount}</div>
+                <div className="col-6 col-md-4"><strong>Fund Size:</strong><br /> {limitedPartnerDetails.fundSize && <div>{limitedPartnerDetails.fundSize}</div>}</div>
+                <div className="col-6 col-md-4"><strong>Investments Made:</strong><br />  {limitedPartnerDetails.totalInvestmentsMade && <div>{limitedPartnerDetails.totalInvestmentsMade}</div>}</div>
               </div>
               <br /><br />
               <div className="row">
-                <div className="col-6 col-md-4"><strong>Geographic Focus</strong><br /> {investorDetails.geographicFocus}</div>
-                <div className="col-6 col-md-4"><strong>Tags</strong><br /> {investorDetails.tags && investorDetails.tags.join(', ')}</div>
+              <div className="col-6 col-md-4"><strong>Headquarters</strong><br /> {limitedPartnerDetails.hq}</div>
+              <div className="col-6 col-md-4"><strong>Geographic Focus</strong><br /> {limitedPartnerDetails.geographicFocus}</div>
+                <div className="col-6 col-md-4"><strong>Eligible GP Fund Size</strong><br /> {limitedPartnerDetails.eligibleGpFundSize}</div>
+              </div><br />
+              <div className="row">
+                <div className="col-12 col-md-4"><strong>Fund Strategy</strong><br /> {limitedPartnerDetails.fundStrategy}</div>
               </div>
               <br />
              
@@ -67,26 +71,26 @@ const LPDetail = () => {
               
               <div className="row">
                 <div className="col-12">
-                  {investorDetails.notes}
+                  {limitedPartnerDetails.notes}
                 </div>
               </div>
               <br /><br /><br />
               <small style={{opacity: 0.3}}>
-                <strong>Status: </strong>{investorDetails.status} <br />
-                <strong>Last Updated:</strong>{new Date(investorDetails.lastUpdated).toLocaleString()}
+                <strong>Status: </strong>{limitedPartnerDetails.status} <br />
+                <strong>Last Updated:</strong>{new Date(limitedPartnerDetails.lastUpdated).toLocaleString()}
               </small>
       </div>
     ),
     'Reviews': (
       <div className="row">
                 <div className="col-12 col-md-6">
-                  <strong>Rating:</strong> {investorDetails.rating && <div>{investorDetails.rating}</div>}
+                  <strong>Rating:</strong> {limitedPartnerDetails.rating && <div>{limitedPartnerDetails.rating}</div>}
                 </div>
                 <div className="col-12 col-md-6">
-                  <strong>Grade:</strong> {investorDetails.grade && <div> {investorDetails.grade}</div>}
+                  <strong>Grade:</strong> {limitedPartnerDetails.grade && <div> {limitedPartnerDetails.grade}</div>}
                 </div><br /><br />
                 <div className="col-12">
-                  <strong>Reviews:</strong><br /> {investorDetails.reviews && <div> {investorDetails.reviews && investorDetails.reviews.join(', ')}</div>}<br />
+                  <strong>Reviews:</strong><br /> {limitedPartnerDetails.reviews && <div> {limitedPartnerDetails.reviews && limitedPartnerDetails.reviews.join(', ')}</div>}<br />
                 </div>
               </div>
     ),
@@ -96,14 +100,14 @@ const LPDetail = () => {
             <div className="col-12 d-flex align-items-center">
                 <img src={icProfile} width="60px" className="mr-3" alt="Profile" />
                 <div>
-                    {investorDetails.primaryContactName && (
+                    {limitedPartnerDetails.primaryContactName && (
                         <div>
-                            <strong>{investorDetails.primaryContactName}</strong><br />
-                            {investorDetails.primaryContactPosition}<br />
+                            <strong>{limitedPartnerDetails.primaryContactName}</strong><br />
+                            {limitedPartnerDetails.primaryContactPosition}<br />
                         </div>
                     )}
-                    {investorDetails.contactEmail && <div>{investorDetails.contactEmail}</div>}
-                    {investorDetails.contactPhone && <div>{investorDetails.contactPhone}</div>}
+                    {limitedPartnerDetails.contactEmail && <div>{limitedPartnerDetails.contactEmail}</div>}
+                    {limitedPartnerDetails.contactPhone && <div>{limitedPartnerDetails.contactPhone}</div>}
                 </div>
             </div>
         </div>
@@ -125,10 +129,10 @@ const LPDetail = () => {
                   <div>
                     <div className="investor-details-page">
                       <h3>
-                        <strong>{investorDetails.name}</strong>
-                        <MandateSelector investorId={id} />
+                        <strong>{limitedPartnerDetails.name}</strong>
+                        <MandateSelector limitedPartnerId={id} />
                       </h3>
-                      {investorDetails.website}<br /><br />
+                      {limitedPartnerDetails.website}<br /><br />
                     </div>
                   </div>
               </div>

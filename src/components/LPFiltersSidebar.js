@@ -9,7 +9,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
     const [selectedInvestmentStage, setSelectedInvestmentStage] = useState([]);
     const [selectedGrades, setSelectedGrades] = useState([]); 
     const [selectedFounderRatings, setSelectedFounderRatings] = useState([]); // New state for selected founder ratings
-    const [selectedInvestorType, setSelectedInvestorType] = useState([]);
+    const [selectedLimitedPartnerType, setSelectedLimitedPartnerType] = useState([]);
     const [industries, setIndustries] = useState([]);
     const [tags, setTags] = useState('');
     const [investmentType, setInvestmentType] = useState('');
@@ -47,11 +47,11 @@ const LPFiltersSidebar = ({ setFilters }) => {
     }
     useEffect(() => {
         handleFilterChange();
-      }, [selectedGeographicFocus, selectedIndustryFocus, selectedInvestorType, selectedInvestmentStage]);
+      }, [selectedGeographicFocus, selectedIndustryFocus, selectedLimitedPartnerType, selectedInvestmentStage]);
     useEffect(() => {
       const fetchUniqueIndustries = async () => {
           try {
-              const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/investors/industries`);
+              const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/limited-partners/industries`);
               setIndustries(response.data);
               console.log(response.data);
           } catch (error) {
@@ -70,7 +70,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
       investmentStages: selectedInvestmentStage,
       grades: selectedGrades,
       founderRatings: selectedFounderRatings,
-      investorTypes: selectedInvestorType
+      limitedPartnerTypes: selectedLimitedPartnerType
     };
 
     setFilters(prevFilters => ({
@@ -99,24 +99,6 @@ const LPFiltersSidebar = ({ setFilters }) => {
           }
       });
   };
-      const toggleInvestmentStage = (stage) => {
-        setSelectedInvestmentStage((prevSelected) => {
-          if (prevSelected && prevSelected.includes(stage)) {
-            return prevSelected.filter((item) => item !== stage);
-            } else {
-                return [...prevSelected, stage];
-            }
-        });
-      };
-      const toggleGrade = (grade) => {
-        setSelectedGrades((prevSelected) => {
-          if (prevSelected && prevSelected.includes(grade)) {
-            return prevSelected.filter((item) => item !== grade);
-          } else {
-            return [...prevSelected, grade];
-          }
-        });
-      };
       const toggleFounderRating = (rating) => {
         setSelectedFounderRatings((prevSelected) => {
           let updatedRatings;
@@ -138,8 +120,8 @@ const LPFiltersSidebar = ({ setFilters }) => {
         });
       };
     
-      const toggleInvestorType = (type) => {
-        setSelectedInvestorType((prevSelected) => {
+      const toggleLimitedPartnerType = (type) => {
+        setSelectedLimitedPartnerType((prevSelected) => {
             if (prevSelected && prevSelected.includes(type)) {
                 return prevSelected.filter((item) => item !== type);
             } else {
@@ -161,7 +143,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Fund of Funds"
-                        onChange={() => toggleInvestorType("Fund of Funds")}
+                        onChange={() => toggleLimitedPartnerType("Fund of Funds")}
                     />&nbsp;
                     Fund of Funds
                 </label>
@@ -169,7 +151,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Government Funds"
-                        onChange={() => toggleInvestorType("Government Funds")}
+                        onChange={() => toggleLimitedPartnerType("Government Funds")}
                     />&nbsp;
                     Government Funds
                 </label>
@@ -177,7 +159,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Corporates"
-                        onChange={() => toggleInvestorType("Corporates")}
+                        onChange={() => toggleLimitedPartnerType("Corporates")}
                     />&nbsp;
                     Corporates
                 </label>
@@ -185,7 +167,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Family Offices"
-                        onChange={() => toggleInvestorType("Family Offices")}
+                        onChange={() => toggleLimitedPartnerType("Family Offices")}
                     />&nbsp;
                     Family Offices
                 </label>
@@ -193,7 +175,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Foundations"
-                        onChange={() => toggleInvestorType("Foundations")}
+                        onChange={() => toggleLimitedPartnerType("Foundations")}
                     />&nbsp;
                     Foundations
                 </label>
@@ -201,7 +183,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Impact Funds"
-                        onChange={() => toggleInvestorType("Impact Funds")}
+                        onChange={() => toggleLimitedPartnerType("Impact Funds")}
                     />&nbsp;
                     Impact Funds
                 </label>
@@ -209,7 +191,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="DFIs"
-                        onChange={() => toggleInvestorType("DFIs")}
+                        onChange={() => toggleLimitedPartnerType("DFIs")}
                     />&nbsp;
                     DFIs
                 </label>
@@ -217,7 +199,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Banks"
-                        onChange={() => toggleInvestorType("Banks")}
+                        onChange={() => toggleLimitedPartnerType("Banks")}
                     />&nbsp;
                     Banks
                 </label>
@@ -225,7 +207,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="HNIs"
-                        onChange={() => toggleInvestorType("HNIs")}
+                        onChange={() => toggleLimitedPartnerType("HNIs")}
                     />&nbsp;
                     HNIs
                 </label>
@@ -233,7 +215,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Endowment Funds"
-                        onChange={() => toggleInvestorType("Endowment Funds")}
+                        onChange={() => toggleLimitedPartnerType("Endowment Funds")}
                     />&nbsp;
                     Endowment Funds
                 </label>
@@ -241,7 +223,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Sovereign Funds"
-                        onChange={() => toggleInvestorType("Sovereign Funds")}
+                        onChange={() => toggleLimitedPartnerType("Sovereign Funds")}
                     />&nbsp;
                     Sovereign Funds
                 </label>
@@ -249,7 +231,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Pension Funds"
-                        onChange={() => toggleInvestorType("Pension Funds")}
+                        onChange={() => toggleLimitedPartnerType("Pension Funds")}
                     />&nbsp;
                     Pension Funds
                 </label>
@@ -257,7 +239,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Investment Banks"
-                        onChange={() => toggleInvestorType("Investment Banks")}
+                        onChange={() => toggleLimitedPartnerType("Investment Banks")}
                     />&nbsp;
                     Investment Banks
                 </label>
@@ -265,7 +247,7 @@ const LPFiltersSidebar = ({ setFilters }) => {
                     <input
                         type="checkbox"
                         value="Trust Funds"
-                        onChange={() => toggleInvestorType("Trust Funds")}
+                        onChange={() => toggleLimitedPartnerType("Trust Funds")}
                     />&nbsp;
                     Trust Funds
                 </label>
@@ -335,8 +317,8 @@ const LPFiltersSidebar = ({ setFilters }) => {
         <span className='filter-section'>INVESTMENT AMOUNT<br /></span><br />
           <Slider
             rootStyle={sliderStyle}
-            domain={[0, 5000000]}
-            step={10000}
+            domain={[0, 500000000]}
+            step={1000000}
             mode={2}
             values={values}
             onUpdate={onUpdate}
@@ -418,20 +400,6 @@ const LPFiltersSidebar = ({ setFilters }) => {
             </Tracks>
           </Slider>
         </div><br /><br />
-        <div>
-          <span className='filter-section'>INVESTMENT STAGE<br /></span><br />
-          {investmentStages.map((stage) => (
-            <label className="custom-checkbox-label" key={stage}>
-              <input
-                type="checkbox"
-                value={stage}
-                onChange={() => toggleInvestmentStage(stage)}
-                checked={selectedInvestmentStage.includes(stage)}
-              />&nbsp;
-              {stage}&nbsp;&nbsp;
-            </label>
-          ))}
-        </div><br />
         <div>
           <span className='filter-section'>RATING<br /></span><br />
           <label className="custom-checkbox-label">
