@@ -21,6 +21,8 @@ import UpdateInvestorForm from './pages/UpdateInvestor';
 import AcceptInvitePage from './components/AcceptInvite';
 import CreateMandate from './pages/CreateMandatePage';
 import ModifyMandateInvestors from './pages/ModifyMandateInvestors';
+import LPList from './pages/LPList';
+import LPDetail from './pages/LPDetail';
 
 const RoleBasedRedirect = () => {
   const navigate = useNavigate();
@@ -72,9 +74,11 @@ function App() {
         <Route path="/" element={<RoleBasedRedirect />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/investors" element={<InvestorList />} />
+        <Route path="/limited-partners" element={<LPList />} />
         <Route path="/investors/new" element={<NewInvestorForm />} />
         <Route path="/investors/update/:id" element={<UpdateInvestorForm />} />
         <Route path="/investors/:id" element={<InvestorDetail />} />
+        <Route path="/limited-partners/:id" element={<LPDetail />} />
         <Route path="/mandates" element={<UserMandates />} />
         <Route path="/people" element={<PeoplePage />} />
         <Route path="/mandates/create" element={<CreateMandate />} />

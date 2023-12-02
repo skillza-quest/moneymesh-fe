@@ -33,6 +33,11 @@ const Topbar = () => {
             {userRole !== 'Startup' && (
                 <>
                     <li className="nav-item">
+                        <NavLink to="/limited-partners" className="active-link">
+                            LPs
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
                         <NavLink to="/investors" className="active-link">
                             Investors
                         </NavLink>
