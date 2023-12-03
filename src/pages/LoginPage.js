@@ -11,9 +11,9 @@ const LoginPage = () => {
       <div className="row justify-content-center">
         <div className="col-11 col-md-6 col-lg-4"><br /><br />
           <div className="card-ext text-center"><br />
-            <strong>Welcome to Spotlight</strong><br /><br />
-            Your one stop platform to access up-to-date information regarding the startup ecosystem worldwide.<br /><br />
-            <button className="btn btn-primary btn-lg" style={{width: '100%', maxWidth: '320px'}} onClick={() => loginWithRedirect()}><small>Login to access Spotlight</small></button>
+            <strong>Welcome to Capdrive</strong><br /><br />
+            Your one stop platform to access up-to-date information regarding the venture capital ecosystem worldwide.<br /><br />
+            <button className="btn btn-primary btn-lg" style={{width: '100%', maxWidth: '320px'}} onClick={() => loginWithRedirect()}><small>Login to access Capdrive</small></button>
           </div>
         </div>
       </div>
